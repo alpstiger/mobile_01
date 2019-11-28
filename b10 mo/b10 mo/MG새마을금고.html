@@ -1,0 +1,3553 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)https://www.kfcc.co.kr/index.do -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><!--Head--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<title>MG새마을금고</title>
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+
+
+
+
+<meta name="description" content="login page">
+
+
+<meta name="viewport" content="width=1280;initial-scale=1.0;maximum-scale=1.0;user-scalable=1;">
+
+
+
+<link rel="shortcut icon" href="https://www.kfcc.co.kr/images/kfcc.Ico">
+<link type="text/css" rel="stylesheet" href="./MG새마을금고_files/jquery-ui.min.css"> 
+<link type="text/css" rel="stylesheet" href="./MG새마을금고_files/common.css"> 
+<link type="text/css" rel="stylesheet" href="./MG새마을금고_files/style.css">
+<!--[if lt IE 9]>
+	<link type="text/css" rel="stylesheet" href="/gov/koneps/vn/css/ie8.css">
+<![endif]-->
+
+
+<link type="text/css" rel="stylesheet" href="./MG새마을금고_files/main3.css">
+
+
+
+
+<script type="text/javascript" src="./MG새마을금고_files/jquery-1.11.3.min.js.다운로드"></script>
+<script type="text/javascript" src="./MG새마을금고_files/jquery-ui-1.11.3.min.js.다운로드"></script>
+<script type="text/javascript" src="./MG새마을금고_files/jquery.mCustomScrollbar.js.다운로드"></script><script src="./MG새마을금고_files/jquery.mousewheel.min.js.다운로드"></script>
+<script type="text/javascript" src="./MG새마을금고_files/jquery-ui.min.js.다운로드"></script>
+<script type="text/javascript" src="./MG새마을금고_files/ui.js.다운로드"></script>
+<script type="text/javascript" src="./MG새마을금고_files/tools.js.다운로드"></script>
+<script type="text/javascript">
+	function openLayer(uri, param, container, wrap) {
+		M4Ajax.asyncCall(uri, param, {
+			onSuccess : function(data) {
+				jQuery(container).html(data);
+				jQuery(wrap).show();
+				app.resetLayerBox();
+			}
+		});
+	}
+
+	function closeLayer() {
+		jQuery(".layerWrap").hide();
+		jQuery(".layerContainer").html("&nbsp;");
+	}
+
+	function openLocationSearch() {
+		var win = window.open('/map/main.do', 'win_staff', 'width=912,height=800,top=20,left=20,scrollbars=yes');
+		win.focus();
+	}
+
+	function ipinProxy() {
+		var param = {};
+		M4Ajax.actionForm("/ipin/proxy.do", param, {
+			method : "post",
+			windowName : "ipin_proxy",
+			windowWidth : "1000",
+			windowHeight : "800",
+			windowFeature : "top=20,left=20,scrollbars=yes"
+		});
+	}
+
+	function ipinCallback(ipinCode, name, birthday,sex) {
+		location.reload();
+	}
+
+	function NewWindow(mypage, myname, w, h, scroll) {
+		var winl = (screen.width - w) / 2;
+		var wint = (screen.height - h) / 4;
+		winprops = 'height=' + h + ',width=' + w + ',top=' + wint + ',left=' + winl + ',scrollbars=' + scroll + ',resizable'
+		win = window.open(mypage, myname, winprops)
+		if (parseInt(navigator.appVersion) >= 4) {
+			win.window.focus();
+		}
+	}
+
+	function openZipCode() {
+		$("#layerWrap3").attr('tabindex', '0').show().focus();
+		app.resetLayerBox();
+	}
+
+	function gugunList() {
+		var code = jQuery("#sido").val();
+		if (code == "") {
+			alert("시/도 를 선택해주세요.");
+			return;
+		}
+		jQuery("#loading_bar_sec1").show();
+		M4Ajax.asyncCall("/address/gugunList.do?sido=" + code, {}, {
+			onSuccess : function(data) {
+				var $obj = $("#sec_gugunDiv");
+				$obj.html(data);
+				$obj.removeClass('ui_complete');
+				window.UI.init();
+				jQuery("#loading_bar_sec1").hide();
+			}
+		});
+	}
+
+	function doroList() {
+		var code1 = jQuery("#sido").val();
+		var code2 = jQuery("#gugun").val();
+		var code3 = jQuery("#doro").val();
+		var code4 = jQuery("#gunmul").val();
+		if (code1 == "") {
+			alert("시/도를 선택해주세요.");
+			return false;
+		}
+		if (code2 == "") {
+			alert("시/구/군을 선택해주세요.");
+			return false;
+		}
+		if (code3 == "") {
+			alert("도로명을 입력해주세요.");
+			return false;
+		}
+		jQuery("#loading_zip").show();
+		M4Ajax.asyncCall("/address/doroList.do", {
+			sido : code1,
+			gugun : code2,
+			doro : code3,
+			gunmul : code4
+		}, {
+			onSuccess : function(data) {
+				var $obj = $("#tb_doroList");
+				$obj.html(data);
+				jQuery("#loading_zip").hide();
+				//$obj.removeClass('ui_complete');
+				//window.UI.init();
+			}
+		});
+	}
+
+	function changeSido() {
+		gugunList();
+	}
+
+	function setLayerAddr(zip, add) {
+		$("#layerZipcode").val(zip);
+		$("#layerAddress1").val(add);
+		$("#layerAddress2").focus();
+	}
+
+	function setOpenerAddr() {
+		$("[name='zipcode']").val($("#layerZipcode").val());
+		$("[name='address1']").val($("#layerAddress1").val());
+		$("[name='address2']").val($("#layerAddress2").val());
+		$("#zipclose").focus();
+		$("#layerWrap3").hide();
+	}
+
+	function layClose() {
+		$("#zipclose").focus();
+		$("#layerWrap3").hide();
+	}
+</script>
+
+
+
+
+<script type="text/javascript" src="./MG새마을금고_files/TweenMax.min.js.다운로드"></script>
+
+
+<script type="text/javascript" src="./MG새마을금고_files/main3.js.다운로드" charset="utf-8"></script>
+
+
+
+
+		<script type="text/javascript">	
+
+		$(document).ready(function() {
+
+			 var curBrowser = IeVersion();
+
+			 openPopup2();
+			
+			 if ( (curBrowser.browserName == "Microsoft Internet Explorer") && (curBrowser.majorVersion=="7" ||curBrowser.majorVersion=="8" )) { //"7" 이면 호환성보기 설정일 것임 
+
+				if(curBrowser.majorVersion=="8"){
+
+					alert("IE8이하에서는 동작이 원할하지 않습니다.\n상위버젼의 브라우저 또는 다른 브라우저를 이용하여 주십시오.");
+
+				} else if(curBrowser.majorVersion=="7") {
+
+					alert("호환성보기 설정이 되어 있는 경우, 동작이 원할하지 않습니다.\n설정값을 변경해 주세요");
+
+					location.href = "/html/etc/ie7.html";
+
+				} else {
+
+					openPopup();
+
+				}
+
+			
+
+			}
+			 var $notice = mainAPP.$body.find(".notice");
+			 var $notContList = $notice.find(".notCont > li");
+			 var $activeTab = $notContList.filter(".on");
+			 var idx = $activeTab.index();
+			 
+			 if(idx==0){ //소식
+
+				 $("#allView").attr("title","MG소식 전체보기");
+
+				}else if(idx==1){//공지사항
+
+					$("#allView").attr("title","MG공지사항 전체보기");
+
+				}else{//입찰공고
+
+					$("#allView").attr("title","입찰공고 전체보기");
+
+				}
+			
+		});
+
+		
+
+		function IeVersion() {
+
+			var nVer = navigator.appVersion;
+
+			var nAgt = navigator.userAgent;
+
+			var browserName = navigator.appName;
+
+			var fullVersion = '' + parseFloat(navigator.appVersion);
+
+			var majorVersion = parseInt(navigator.appVersion, 10);
+
+			var nameOffset, verOffset, ix;
+
+			var resultVersion = {};
+
+			
+
+			if((verOffset = nAgt.indexOf("MSIE")) != -1){
+
+				browserName = "Microsoft Internet Explorer";
+
+				fullVersion = nAgt.substring(verOffset + 5);
+
+			}else if((verOffset = nAgt.indexOf("Trident")) > -1){
+
+				browserName = "Microsoft Internet Explorer";
+
+				var ver = nAgt.substring(verOffset + 8, verOffset + 9);
+
+				fullVersion = parseInt(ver) + 4;
+
+			}
+
+			
+
+			if(typeof fullVersion == "string" && (ix = fullVersion.indexOf(";")) != -1){
+
+				fullVersion = fullVersion.substring(0, ix);
+
+			}
+
+			
+
+			if(typeof fullVersion == "string" && (ix = fullVersion.indexOf(" ")) != -1){
+
+				fullVersion = fullVersion.substring(0, ix);
+
+			}
+
+			
+
+			majorVersion = parseInt('' + fullVersion, 10);
+
+			
+
+			if(isNaN(majorVersion)){
+
+				fullVersion = '' + parseFloat(navigator.appVersion);
+
+				majorVersion = parseInt(navigator.appVersion, 10);
+
+			}
+
+			
+
+			resultVersion.appVersion = nVer;
+
+			resultVersion.userAgent = nAgt;
+
+			resultVersion.browserName = browserName;
+
+			resultVersion.fullVersion = fullVersion;
+
+			resultVersion.majorVersion = majorVersion;
+
+			
+
+			return resultVersion;
+
+		}
+
+		
+
+		function notilist(){
+
+			
+
+			var $notice = mainAPP.$body.find(".notice");
+
+			var $notContList = $notice.find(".notCont > li");
+
+			var $activeTab = $notContList.filter(".on");
+
+			var $noticeDoc = $activeTab.find(".notice_doc li");
+
+			var noticeLength = $noticeDoc.length;
+
+			var idx = $activeTab.index();
+
+			
+
+			if(idx==0){ //소식
+
+				location.href = "/cyberpr/cyb0202.do";
+
+			}else if(idx==1){//공지사항
+
+				location.href = "/cyberpr/cyb0201.do";
+
+			}else{//입찰공고
+
+				location.href = "/cyberpr/cyb0204.do";
+
+			}
+
+			
+
+		}
+
+		
+
+		function getCookie(name) {
+
+			var found = false;
+
+			var start,end;
+
+			var i=0;
+
+			
+
+			while(i<document.cookie.length){
+
+				start = i;
+
+				end = start+name.length;
+
+				
+
+				if(document.cookie.substring(start, end)==name){
+
+					found = true;
+
+					break;
+
+				}
+
+				i++;
+
+			}
+
+			
+
+			if(found){
+
+				start = end+1;
+
+				end = document.cookie.indexOf(";", start);
+
+				if(end < start) {
+
+					end = document.cookie.length;
+
+				}
+
+				return document.cookie.substring(start,end);
+
+			}
+
+			return "";
+
+		}
+
+		
+
+		function openPopup(){
+
+			var noticeCookie= getCookie("KfccNoti");
+
+			if(noticeCookie != "no") {
+
+				$("#gongzipop").show().focus();
+
+				app.resetLayerBox();
+
+			}
+
+		}
+
+		
+
+		function setCookie(name, value, expiredays) {
+
+			var todayDate = new Date();
+
+			todayDate.setDate(todayDate.getDate()+expiredays);
+
+			document.cookie = name+"="+escape(value)+"; path=/;expires="+todayDate.toGMTString()+";";
+
+		}
+
+		
+
+		function closePop(){
+
+			var fo = document.popf2;
+
+			if (fo.popChk.checked) {
+
+				setCookie("KfccNoti", "no", 365);
+
+			}  
+
+			$("#gongzipop2").hide();
+
+		}
+		function openPopup2(){
+			/*
+			var noticeCookie= getCookie("KfccNoti");
+
+			if(noticeCookie != "no") {
+
+				$("#gongzipop2").show().focus();
+
+				app.resetLayerBox();
+
+			}else {
+				$("#gongzipop2").hide();
+			}
+			var toDay = $("#toDay").val();
+			if(toDay > 201712071045){
+				$("#gongzipop2").hide();	
+			}
+			*/
+			$("#gongzipop2").hide();
+			
+			
+		}
+		
+		
+
+		</script>
+
+	
+
+
+<script type="text/JavaScript">
+
+
+var fadecnt = 0;
+
+
+
+
+
+var firstcnt = 0; 
+
+
+
+
+
+var fadetotalcnt = 3; //이미지 총 수
+
+
+
+
+
+
+
+
+
+
+
+function fademove()
+
+
+
+
+
+{
+
+
+
+
+
+	var fadeprev = ""; //이전이미지값 함수
+
+
+
+
+
+	var fademine =  0;
+
+
+
+
+
+	
+
+
+
+
+
+	//이미지가 한바퀴돈후 첫이미지일경우 fadecnt 값이 0이 되었을시 이전페이지 값 정하기
+
+
+
+
+
+     if(fadecnt == 0 && firstcnt != 0)
+
+
+
+
+
+		{
+
+
+
+
+
+		fademine= fadetotalcnt-1;
+
+
+
+
+
+		}else 
+
+
+
+
+
+		{
+
+
+
+
+
+			fademine = fadecnt-1;
+
+
+
+
+
+		}
+
+
+
+
+
+	
+
+
+
+
+
+	fadeprev  ="#cycle"+fademine; 
+
+
+
+
+
+	var fadedef = "#cycle"+fadecnt; //현제 이미지값
+
+
+
+
+
+	var timeout = 7000; //이미지 fade함수 실행시간값
+
+
+
+
+
+	if(firstcnt == 0)
+
+
+
+
+
+		{		
+
+
+
+
+
+			/* $("#cycle"+fadecnt).fadeIn(3000); */			
+
+
+
+
+
+			timeout = 3000;
+
+
+
+
+
+			/* $("#cycle"+fadecnt).fadeTo(4000,1); */
+
+
+
+
+
+		}else
+
+
+
+
+
+			{
+
+
+
+
+
+			      setTimeout("fadefirst('"+fadeprev+"')", 1000);		
+
+
+
+
+
+			      setTimeout("fadesecond('"+fadedef+"')",2000);			
+
+
+
+
+
+
+
+
+
+
+
+			}
+
+
+
+
+
+		
+
+
+
+
+
+			if(	fadetotalcnt-1 == fadecnt)
+
+
+
+
+
+			{
+
+
+
+
+
+				 fadecnt  = 0;
+
+
+
+
+
+			}else
+
+
+
+
+
+			{
+
+
+
+
+
+					 fadecnt ++;
+
+
+
+
+
+			}		
+
+
+
+
+
+			
+
+
+
+
+
+			// 메인 이미지 button 활성화 처리
+
+
+
+
+
+			if(fadecnt==0){
+
+
+
+
+
+				   setTimeout("visualOnOff(1)", 8000);  //8초 후 첫번째 버튼 활성화
+
+
+
+
+
+			}else if(fadecnt==1){
+
+
+
+
+
+				if(firstcnt == 0)
+
+
+
+
+
+				{	
+
+
+
+
+
+				   setTimeout("visualOnOff(2)", 4000); //4초 후 두번째 버튼 활성화
+
+
+
+
+
+				}else{					
+
+
+
+
+
+					
+
+
+
+
+
+				    setTimeout("visualOnOff(2)", 8000); //8초 후 두번째 버튼 활성화					
+
+
+
+
+
+				}				
+
+
+
+
+
+			}else{			
+
+
+
+
+
+					
+
+
+
+
+
+				    setTimeout("visualOnOff(3)", 8000); //8초 후 마지막 우축 버튼 활성화					
+
+
+
+
+
+				
+
+
+
+
+
+			}
+
+
+
+
+
+			
+
+
+
+
+
+			 setTimeout("fademove()", timeout);
+
+
+
+
+
+			 firstcnt++;
+
+
+
+
+
+			 timeout = 7000; //이미지 fade함수 실행시간값
+
+
+
+
+
+			 
+
+
+			 //var width = -($(".wrapArea").width()/2);
+
+
+				
+
+
+			//$(".visual").css("margin-left",width);			
+
+
+			
+
+
+
+
+
+	}
+
+
+$("#document").ready(function() {
+
+
+
+
+
+
+
+
+
+
+
+	//fademove();
+
+
+	
+
+
+	
+
+
+});
+
+
+function fadefirst(val)
+
+
+
+
+
+{
+
+
+
+
+
+	//alert("obj="+val);
+
+
+
+
+
+		$(val).fadeTo(1500,0);
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+ *  main image 입장 
+
+
+
+
+
+ *
+
+
+
+
+
+ */
+
+
+
+
+
+function fadesecond(val)
+
+
+
+
+
+{
+
+
+
+
+
+	//alert("obj1="+val);
+
+
+
+
+
+		$(val).fadeTo(1500,1);
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+ *  main image 버튼 클릭시 직정 해당이미지로 이동 
+
+
+
+
+
+ *
+
+
+
+
+
+ */
+
+
+
+
+
+function directFadeMove(index)
+
+
+
+
+
+{	
+
+
+
+
+
+	var fadecurr = "#cycle"+index; //display 될 현제 이미지값
+
+
+
+
+
+	
+
+
+
+
+
+	/*
+
+
+
+
+
+	 *이미지가 2개일때('#cycle0', '#cycle1' )
+
+
+
+
+
+	 *이미지가 3개일때('#cycle0', '#cycle1','#cycle2' )
+
+
+
+
+
+	 *이미지가 4개일때('#cycle0', '#cycle1','#cycle2','#cycle3' )
+
+
+
+
+
+	 *이미지가 5개일때('#cycle0', '#cycle1','#cycle2','#cycle3','#cycle4' )
+
+
+
+
+
+	*/
+
+
+
+
+
+	$('#cycle0').fadeTo(0,0); //첫번째 main 이미지 퇴장
+
+
+
+
+
+	$('#cycle1').fadeTo(0,0); //두번째 main 이미지 퇴장
+
+
+
+
+
+	$('#cycle2').fadeTo(0,0); //세번째 main 이미지 퇴장
+
+
+
+
+
+	/*
+
+
+
+
+
+	//$('#cycle2').fadeTo(0,0); //세번째 main 이미지 퇴장
+
+
+
+
+
+	//$('#cycle3').fadeTo(0,0); //네번째 main 이미지 퇴장
+
+
+
+
+
+	//$('#cycle4').fadeTo(0,0); //다섯번째 main 이미지 퇴장
+
+
+
+
+
+	*/
+
+
+
+
+
+	
+
+
+
+
+
+	$(fadecurr).fadeTo(0,1);// 선택한 이미지 입장.
+
+
+
+
+
+		
+
+
+
+
+
+	
+
+
+
+
+
+	$("#visual0").removeClass("visual_none");
+
+
+
+
+
+	$("#visual1").removeClass("visual_none");				
+
+
+
+
+
+	$("#visual2").removeClass("visual_none");
+
+
+	$("#visual3").removeClass("visual_none");
+
+
+	$("#visual0").removeClass("visual_select");
+
+
+
+
+
+	$("#visual1").removeClass("visual_select");				
+
+
+
+
+
+	$("#visual2").removeClass("visual_select");
+
+	$("#visual3").removeClass("visual_select");
+
+
+
+	
+
+
+
+
+
+	if(index==0){	
+
+
+
+
+
+		//첫번째 버튼 활성화
+
+
+
+
+
+		$("#visual0").addClass("visual_select");
+
+
+
+
+
+		$("#visual1").addClass("visual_none");
+
+
+
+
+
+		$("#visual2").addClass("visual_none");
+
+		$("#visual3").addClass("visual_none");
+
+
+
+		
+
+
+
+
+
+	}else if(index==1){
+
+
+
+
+
+		//두번째 버튼 활성화	
+
+
+
+
+
+		$("#visual0").addClass("visual_none");
+
+
+
+
+
+		$("#visual1").addClass("visual_select");
+
+
+
+
+
+		$("#visual2").addClass("visual_none");
+
+		$("#visual3").addClass("visual_none");
+
+
+
+		
+
+
+
+
+
+    }else if(index==2){
+
+
+
+
+
+		//세번째 버튼 활성화
+
+
+
+
+
+		$("#visual0").addClass("visual_none");
+
+
+
+
+
+		$("#visual1").addClass("visual_none");
+
+
+
+
+
+		$("#visual2").addClass("visual_select");
+
+
+
+		$("#visual3").addClass("visual_none");
+
+		
+
+
+
+
+
+	}else if(index==3){
+
+
+
+
+
+		//네번째 버튼 활성화
+
+
+
+
+
+		$("#visual0").addClass("visual_none");
+
+
+
+
+
+		$("#visual1").addClass("visual_none");
+
+
+
+
+
+		$("#visual2").addClass("visual_none");
+
+
+
+		$("#visual3").addClass("visual_select");
+
+		
+
+
+
+
+
+	}
+
+
+
+
+
+	
+
+
+
+
+
+}	
+
+
+
+
+
+		 
+
+
+
+
+
+	 
+
+
+
+
+
+function visualOnOff(val)
+
+
+
+
+
+{	
+
+
+
+
+
+	
+
+
+
+
+
+	if(val == 1)
+
+
+
+
+
+	{     
+
+
+
+
+
+	    $("#visual0").removeClass("visual_none");
+
+
+
+
+
+		$("#visual1").removeClass("visual_none");				
+
+
+
+
+
+		$("#visual2").removeClass("visual_none");
+
+
+		$("#visual3").removeClass("visual_none");
+
+
+		$("#visual0").addClass("visual_select");
+
+
+
+
+
+		$("#visual1").addClass("visual_none");
+
+
+
+
+
+		$("#visual2").addClass("visual_none");
+
+
+		$("#visual3").addClass("visual_none");
+
+
+		
+
+
+
+
+
+	}else if(val == 2){
+
+
+
+
+
+		
+
+
+
+
+
+		$("#visual0").removeClass("visual_select");
+
+
+
+
+
+		$("#visual1").removeClass("visual_none");
+
+
+
+
+
+		$("#visual2").removeClass("visual_none");
+
+
+		$("#visual3").removeClass("visual_none");
+
+
+		$("#visual0").addClass("visual_none");
+
+
+
+
+
+		$("#visual1").addClass("visual_select");
+
+
+
+
+
+		$("#visual2").addClass("visual_none");
+
+
+		$("#visual3").addClass("visual_none");
+
+
+     }else if(val == 3){
+
+
+
+
+
+		
+
+
+
+
+
+    	 $("#visual0").removeClass("visual_select");
+
+
+
+
+
+ 		 $("#visual1").removeClass("visual_none");
+
+
+
+
+
+ 		 $("#visual2").removeClass("visual_none");
+
+
+ 		$("#visual3").removeClass("visual_none");
+
+
+ 		 $("#visual0").addClass("visual_none");
+
+
+
+
+
+ 		 $("#visual1").addClass("visual_none");
+
+
+
+
+
+ 		 $("#visual2").addClass("visual_select");			
+
+
+
+ 		$("#visual3").addClass("visual_none");
+
+	}else if(val == 4){
+
+
+
+
+
+		
+
+
+
+
+
+   	 	$("#visual0").removeClass("visual_select");
+
+
+
+
+
+		 $("#visual1").removeClass("visual_none");
+
+
+
+
+
+		 $("#visual2").removeClass("visual_none");
+
+
+		$("#visual3").removeClass("visual_select");
+
+
+		 $("#visual0").addClass("visual_none");
+
+
+
+
+
+		 $("#visual1").addClass("visual_none");
+
+
+
+
+
+		 $("#visual2").addClass("visual_none");			
+
+
+
+		$("#visual3").addClass("visual_select");
+
+	}
+
+
+}
+
+
+
+
+
+
+
+
+</script></head>
+
+
+<!--Head Ends-->
+
+
+
+
+
+<!--Body-->
+
+
+<body>
+
+
+
+<div id="skipNavi">
+	<a href="https://www.kfcc.co.kr/index.do#contents"><span>본문내용 바로가기</span></a>
+	<a href="https://www.kfcc.co.kr/index.do#gnb"><span>메인메뉴 바로가기</span></a>
+	<a href="https://www.kfcc.co.kr/index.do#footer"><span>하단내용 바로가기</span></a>
+</div>
+
+
+<!-- WRAP -->
+
+
+<div id="wrap">
+
+
+	
+
+<!-- HEADER -->
+
+<div id="header">
+  <div class="gnbBg"></div>
+  
+	<div class="headWrap">
+
+		<div class="inner">
+
+			<div class="tit">
+
+				<h1>
+
+					<a href="https://www.kfcc.co.kr/index.do">
+
+						<img src="./MG새마을금고_files/logo.png" alt="MG새마을금고">
+
+					</a>
+
+				</h1>
+
+			</div>
+
+
+			
+
+<div id="mgnb">
+
+	<h2 class="blind">메인메뉴</h2>
+
+	<div class="gnbMenu">
+
+		<ul>
+
+			<li class="m1"><span>
+
+					<a href="https://www.kfcc.co.kr/federation/fed0101.do">새마을금고</a>
+
+				</span>
+
+				<div class="nav2Dep">
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="https://www.kfcc.co.kr/federation/fed0101.do">CEO</a>
+							 <div class="nav3Dep">
+ 
+							        <ul> 
+									    <li><a href="https://www.kfcc.co.kr/federation/fed0102.do">중앙회장 동정</a></li>
+								    </ul>
+
+							</div></li>
+									
+									
+							<li><a href="https://www.kfcc.co.kr/gumgo/gum0101.do">일반현황</a>
+	
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0101.do">기원 및 현황</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0102.do">비전 및 이념</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0103.do">새마을금고 회원안내</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0104.do">새마을금고 연혁 </a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0105_01.do">새마을금고 CI </a></li>
+                                        
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0901.do">새마을금고 법령 및 규약</a></li>
+									</ul>
+
+								</div></li>
+										
+								
+                              <li><a href="https://www.kfcc.co.kr/gumgo/gum0201.do">윤리경영</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0201.do">윤리경영</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0202.do">임직원 윤리헌장</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0203.do">임직원 윤리강령</a></li>
+
+									</ul>
+
+								</div></li>
+								
+								<li><a href="https://www.kfcc.co.kr/gumgo/gum0301_list.do">전자공시</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0301_list.do">정기공시</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/gumgo/gum0701.do">수시공시</a></li>
+										
+                                        <li><a href="https://www.kfcc.co.kr/gumgo/gum0401.do">금리비교공시</a><div class="nav4Dep">
+											  
+											    <ul>
+ 
+													<li><a href="https://www.kfcc.co.kr/gumgo/gum0401.do">- 금리비교공시안내</a></li>
+
+													<li><a href="https://www.kfcc.co.kr/gumgo/gum0601_list.do">- 금리비교공시</a></li>
+
+													<li><a href="https://www.kfcc.co.kr/gumgo/gum0403.do">- 금리인하 요구권 안내</a></li>
+
+													<li><a href="https://www.kfcc.co.kr/gumgo/gum0404.do">- 금리인하 요구권 안내<br>&nbsp;&nbsp;&nbsp;(중앙회)</a></li>
+
+											    </ul>
+										
+											 </div></li>
+
+									</ul>
+
+								</div></li>
+								
+								<li><a href="https://www.kfcc.co.kr/federation/fed0201.do">새마을금고중앙회 </a>
+
+								<div class="nav3Dep">
+                                        
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/federation/fed0201.do">중앙회 주요업무</a></li>
+										
+										<li><a href="https://www.kfcc.co.kr/federation/fed0301.do">중앙회 가치체계 </a></li>
+											 
+										<li><a href="https://www.kfcc.co.kr/federation/fed0401.do">중앙회 인재상</a></li>
+										
+										<li><a href="https://www.kfcc.co.kr/federation/fed0202.do">중앙회 연혁</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/federation/fed0203.do">중앙회 조직현황</a></li>
+										
+										<li><a href="https://www.kfcc.co.kr/federation/fed0501.do">윤리경영</a></li>
+										
+										<li><a href="https://www.kfcc.co.kr/federation/fed0701.do">중앙회 위치안내</a>
+										</li>
+												 
+									</ul>
+									
+								</div></li>
+								
+						</ul>
+
+					</div>
+	
+				</div>
+				
+			</li>
+
+			<li class="m2"><span>
+
+					<a href="https://www.kfcc.co.kr/local/loc0101.do">사회공헌</a>
+
+				</span>
+
+				<div class="nav2Dep">
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0101.do">새마을금고사회공헌소개</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0101.do">일반현황</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0601_01.do">사회공헌 BI</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0701.do">사회공헌 가치체계도</a></li>
+
+									</ul>
+
+								</div></li>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0201.do">새마을금고복지사업</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0201.do">지역사회개발사업</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0204.do">평생교육사업</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0206.do">문화예술체육사업</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0202.do">복지지원사업</a></li>
+
+									</ul>
+
+								</div></li>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0205_01.do">새마을금고핵심사회공헌사업</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0205_01.do">사랑의 좀도리운동</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0205.do">자원봉사활동</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0209.do">MG희망나눔 금융교실</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0203.do">장학금지원</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/local/loc0208.do">전통시장살리기</a></li>
+
+									</ul>
+
+								</div></li>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0801.do">대학생 서포터즈</a>
+
+						</li></ul>
+
+						<ul>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0401.do">사회공헌소식</a></li>
+
+							<li><a href="https://www.kfcc.co.kr/local/loc0501_2016_list.do">사회공헌 우수사례</a></li>
+
+						</ul>
+
+					</div>
+
+				</div>
+				</li>
+				
+				<li class="m3"><span>
+
+					<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">홍보센터</a>
+
+				</span>
+
+				<div class="nav2Dep">
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">뉴스센터</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">보도자료</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0201.do">MG공지사항</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0202.do">MG소식</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do">입찰공고</a></li>
+
+									</ul>
+
+								</div></li>
+
+							<li><a href="https://www.kfcc.co.kr/cyberpr/cyb1001.do">홍보간행물</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb1001.do">새마을금고 50년사</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0901.do">홍보안내책자</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0301.do">월간 MG새마을금고</a></li>
+
+									</ul>
+
+								</div></li>
+
+							<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0101_01.do">홍보자료실</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0101_01.do">광고</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0501_03_5.do">사진자료실</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0701_01.do">영상자료실</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/cyberpr/cyb0702_01.do">기타자료실</a></li>
+
+									</ul>
+
+								</div></li>
+
+						</ul>
+
+					</div>
+
+				</div>
+				</li>
+				
+				<li class="m4"><span>
+
+					<a href="https://www.kfcc.co.kr/federation/fed0601_01.do">연구분석 </a>
+
+				</span>
+
+				<div class="nav2Dep">
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="https://www.kfcc.co.kr/federation/fed0601_01.do">연구자료</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/federation/fed0601_01.do">새마을금고 연구 </a></li>
+										
+										<li><a href="https://www.kfcc.co.kr/federation/fed0604_01_entry.do">연구논문 응모</a></li>
+
+										<li><a href="https://www.kfcc.co.kr/federation/fed0603_01.do">심포지엄 · 포럼 </a></li>
+
+									</ul>
+
+								</div>
+								
+							</li>
+							<li><a href="https://www.kfcc.co.kr/federation/fed0601_01.do">통계정보</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="https://www.kfcc.co.kr/federation/fed0602.do">새마을금고 통계 </a></li>
+										
+									</ul>
+
+								</div>
+								
+							</li>
+						
+						</ul>
+
+					</div>
+				</div>
+	        </li>
+
+			<li class="m5">
+
+				<span><a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">채용정보</a></span>
+
+				<div class="nav2Dep">
+
+					<div class="inner">
+
+					<ul>
+
+						<li><a href="https://www.kfcc.co.kr/recruit/rec0095.do">새마을금고중앙회 채용정보 </a>
+
+							<div class="nav3Dep">
+
+								<ul>
+
+									<li><a href="https://www.kfcc.co.kr/recruit/rec0095.do">채용공고</a></li>
+
+									<!-- <li><a href="/recruit/career/rec0595.do">전문계약직 직원채용 서류전형<br/>합격자발표</a></li> -->
+
+								</ul>
+
+							</div>
+
+						</li>									
+
+						<li><a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">새마을금고 채용정보 </a>
+
+							<div class="nav3Dep">
+
+								<ul>
+
+									<li><a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">금고 공개경쟁채용 </a>
+
+									</li>
+
+									<li><a href="https://www.kfcc.co.kr/recruit/rec0104.do">금고 수시채용</a></li>
+
+								</ul>
+
+							</div>
+
+						</li>
+
+					</ul>
+
+				</div>
+
+			</div></li>
+        <li class="m6"><span>
+
+					<a href="javascript:void(0);" onclick="javascript:window.open(&#39;/map/main.do&#39;, &#39;win_staff&#39;, &#39;width=1000,height=800,top=20,left=20,scrollbars=yes&#39;);">새마을금고 위치안내</a>
+
+				</span>
+
+				<!--<div class="nav2Dep">
+
+					<div class="inner">
+
+						<ul>
+
+							<li><a href="/federation/fed0601_01.do">새마을금고 연구분석</a>
+
+								<div class="nav3Dep">
+
+									<ul>
+
+										<li><a href="/federation/fed0601_01.do">새마을금고 연구 </a></li>
+
+										<li><a href="/federation/fed0602.do">새마을금고 통계 </a></li>
+
+										<li><a href="/federation/fed0603_01.do">심포지엄 · 포럼 </a></li>
+
+										<li><a href="/federation/fed0604_01_entry.do">연구논문 응모</a></li>
+
+									</ul>
+
+								</div>
+								
+							</li>
+						
+						</ul>
+
+					</div>
+				</div>-->
+	        </li>
+		</ul>
+
+	</div>
+
+	<a href="javascript:void(0);" class="btnAllMenu">전체메뉴</a>
+
+</div>
+
+		</div>
+
+	</div>
+
+	
+<!--전체메뉴 start -->
+<div class="allMenuWrap">
+	<div class="inner">
+		<h2>전체메뉴</h2>
+		<div class="allMenu">
+			<div class="allMenuPrice mCustomScrollbar _mCS_1 mCS_no_scrollbar"><div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: 375px;" tabindex="0"><div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+				<!-- allMenu -->
+				<ul class="rowArea">
+					<li>
+						<h3><a href="javascript:void(0);">새마을금고</a></h3>
+						<ul>
+							<li>
+								<h4><a href="https://www.kfcc.co.kr/federation/fed0101.do">CEO</a></h4>
+								<div>
+								<a href="https://www.kfcc.co.kr/federation/fed0101.do">CEO</a>
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do">중앙회장 동정</a>
+								</div>
+							</li>
+							<li>
+								<h4><a href="https://www.kfcc.co.kr/gumgo/gum0101.do">일반현황</a></h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0101.do">기원 및 현황</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0102.do">비전 및 이념</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0103.do">새마을금고 회원안내</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0104.do">새마을금고 연혁 </a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0105_01.do">새마을금고 CI </a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0901.do">새마을금고 법령 및 규약</a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0201.do">윤리경영</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0201.do">윤리경영</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0202.do">임직원 윤리헌장</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0203.do">임직원 윤리강령</a>
+								</div>
+							</li>
+							<li>
+								<h4><a href="https://www.kfcc.co.kr/gumgo/gum0301_list.do">전자공시</a></h4>
+								<div>
+								    <a href="https://www.kfcc.co.kr/gumgo/gum0301_list.do">정기공시</a>
+                                    <a href="https://www.kfcc.co.kr/gumgo/gum0701.do">수시공시</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0401.do">금리비교공시안내</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0601_list.do">금리비교공시</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0403.do">금리인하 요구권 안내</a>
+									<a href="https://www.kfcc.co.kr/gumgo/gum0404.do">금리인하 요구권 안내(중앙회)</a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/federation/fed0201.do">새마을금고중앙회</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/federation/fed0201.do">중앙회 주요업무</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0301.do">중앙회 가치체계</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0302.do">미션&amp;비젼</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0303.do">핵심가치</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0401.do">중앙회 인재상</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0202.do">중앙회 연혁</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0203.do">중앙회 조직현황</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0501.do">윤리경영</a>
+									<a href="https://www.kfcc.co.kr/federation/fed0701.do">중앙회 위치안내</a>
+								</div>
+							</li>
+							
+						</ul>
+					</li>
+					
+					<li>
+						<h3><a href="https://www.kfcc.co.kr/local/loc0101.do">사회공헌</a></h3>
+						<ul>
+							<li>
+								<h4><a href="https://www.kfcc.co.kr/local/loc0101.do">새마을금고사회공헌소개</a></h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/local/loc0101.do">일반현황</a>
+									<a href="https://www.kfcc.co.kr/local/loc0601_01.do">사회공헌 BI</a>
+									<a href="https://www.kfcc.co.kr/local/loc0701.do">사회공헌 가치체계도</a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/local/loc0201.do">새마을금고복지사업</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/local/loc0201.do">지역사회개발사업</a>
+									<a href="https://www.kfcc.co.kr/local/loc0204.do">평생교육사업</a>
+									<a href="https://www.kfcc.co.kr/local/loc0206.do">문화예술체육사업 </a>
+									<a href="https://www.kfcc.co.kr/local/loc0202.do">복지지원사업 </a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/local/loc0205_01.do">새마을금고핵심사회공헌사업</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/local/loc0205_01.do">사랑의 좀도리운동</a>
+									<a href="https://www.kfcc.co.kr/local/loc0205.do">자원봉사활동</a>
+									<a href="https://www.kfcc.co.kr/local/loc0209.do">MG희망나눔 금융교실 </a>
+									<a href="https://www.kfcc.co.kr/local/loc0203.do">장학금지원 </a>
+									<a href="https://www.kfcc.co.kr/local/loc0208.do">전통시장살리기 </a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/local/loc0801.do">대학생 서포터즈</a>
+								</h4>
+								<div></div>
+							</li>
+							<!-- <li>
+								<h4>
+									<a href="/local/loc0301.do">홍보영상</a>
+								</h4>
+								<div></div>
+							</li> -->
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/local/loc0401.do">사회공헌 소식</a>
+								</h4>
+								<div></div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/local/loc0501_2016_list.do">사회공헌 우수사례</a>
+								</h4>
+								<div></div>
+							</li>
+						</ul>
+					</li>
+					
+					<li>
+						<h3>
+							<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">홍보센터</a>
+						</h3>
+						<ul>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">뉴스센터 </a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do">보도자료</a>
+									
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0201.do">MG공지사항</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0202.do">MG소식</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do">입찰공고</a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb1001.do">홍보간행물</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb1001.do">새마을금고 50년사</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0901.do">홍보안내책자</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0301.do">월간 MG새마을금고 </a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0101_01.do">홍보자료실</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0101_01.do">광고</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0501_03_5.do">사진자료실</a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0701_01.do">영상자료실 </a>
+									<a href="https://www.kfcc.co.kr/cyberpr/cyb0702_01.do">기타자료실 </a>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>
+							<a href="https://www.kfcc.co.kr/federation/fed0601_01.do">연구분석</a>
+						</h3>
+						<ul>
+							 <li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/federation/fed0601_01.do">연구자료</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/federation/fed0601_01.do">새마을금고 연구 </a>
+									<a href="https://www.kfcc.co.kr/federation/fed0604_01_entry.do">연구논문 응모 </a>
+									<a href="https://www.kfcc.co.kr/federation/fed0603_01.do">심포지엄·포럼 </a>
+								</div>
+							</li> 
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/federation/fed0601_01.do">통계정보</a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/federation/fed0602.do">새마을금고 통계</a>
+								</div>
+							</li> 
+						</ul>
+					</li>
+					<li>
+						<h3>
+							<a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">채용정보</a>
+						</h3>
+						<ul>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/recruit/rec0095.do">새마을금고중앙회 채용정보 </a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/recruit/rec0095.do">채용공고</a>
+								</div>
+							</li>
+							<li>
+								<h4>
+									<a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">새마을금고 채용정보 </a>
+								</h4>
+								<div>
+									<a href="https://www.kfcc.co.kr/recruit/gumgo/rec01.do">금고 공개경쟁채용 </a>
+									<a href="https://www.kfcc.co.kr/recruit/rec0104.do">금고 수시채용</a>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3>
+							<a href="javascript:void(0);" onclick="javascript:window.open(&#39;/map/main.do&#39;, &#39;win_staff&#39;, &#39;width=1000,height=800,top=20,left=20,scrollbars=yes&#39;);">새마을금고 위치안내</a>
+						</h3>
+						<!--<ul>
+							<li>
+								<h4>
+									<a href="/recruit/rec0102.do">새마을금고 채용정보 </a>
+								</h4>
+								<div>
+									<a href="/recruit/rec0102.do">금고 공개경쟁채용 </a>
+									<a href="/recruit/rec0104.do">금고 수시채용</a>
+								</div>
+							</li>
+						</ul>-->
+					</li>
+				</ul>
+			</div><div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;"><div class="mCSB_draggerContainer"><div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; top: 0px;"><div class="mCSB_dragger_bar" style="line-height: 30px;"></div></div><div class="mCSB_draggerRail"></div></div></div></div></div>
+			<!-- //allMenu -->
+		</div>
+		<a href="javascript:void(0);" class="btnClose">닫기</a>
+	</div>
+</div>
+<!--//전체메뉴 end -->
+
+</div>
+
+<!-- //HEADER -->
+
+
+	<div class="wrapArea">
+
+
+			<!-- mainlist -->
+			
+
+			<div class="bodyBg">
+			<!-- mainlist -->
+			
+				
+				
+				
+				<li class="current">
+					<img src="./MG새마을금고_files/viewImage.do" alt="2019가을01_당신의좋은날MG새마을금고" style="display: none; opacity: 1; z-index: 1;">
+				</li>
+			
+				<li>
+					<img src="./MG새마을금고_files/viewImage(1).do" alt="2019가을02_좋은이웃MG새마을금고언제나곁에서힘이되는등든한이웃처럼" style="opacity: 1; z-index: 1; display: block;">
+				</li>
+			
+				<li>
+					<img src="./MG새마을금고_files/viewImage(2).do" alt="2019가을03_좋은이웃MG새마을금고언제나곁에서힘이되는등든한이웃처럼" style="opacity: 0.319375; z-index: 3; display: block;">
+				</li>
+			
+				
+			
+			
+		</div>
+		<!-- 
+		<div class="banner01">
+				<div class="banBg"></div>
+				<span>MG중앙회장 동정</span>
+				<ul>
+					
+					
+				</ul>
+				<div class="pointer">
+					<a href="javascript:void(0);" class="prevGo">앞으로 이동</a>
+					<a href="javascript:void(0);" class="nevtGo">뒤로 이동</a>
+				</div>
+				
+				<div class="ctrBtn">
+					<a href="#" class="">정지/재생 버튼</a>
+					
+				</div>
+			</div>
+			
+			<div class="banner02">
+				<div class="banBg"></div>
+				<span>MG보도자료</span>
+				<ul>
+					
+					
+						<li class="on">
+							<a href="/recruit/rec0095_view.do?seq=1139&pageNo=1" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=recruit_20191122_1574397455794.png" title="새마을금고중앙회 별정직(신입) 및 전문계약직 직원 채용 공고"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="/cyberpr/cyb0201.do?num=262&reqMode=view" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=20191119_금융실무교육과정_1574067590127.jpg" title="2019년새마을금고대학생금융실무교육과정모집안내"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000001126" class="link list01" target="_blank" title="새창열림">
+								<img src="/file/viewImage.do?category=main&nm=20160218_1741_301.jpg" title="미지급배당금"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="https://mgcheck.kfcc.co.kr" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=체크카드_1571994817515.png" title="해외체크카드오픈안내"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="/recruit/gumgoCareer/rec0201.do" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=190329_새마을금고 경력직 인재풀 등록_1553851559152.png" title="새마을금고 경력직인재풀등록"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="https://insu.kfcc.co.kr/res/res.do" class="link list01" target="_blank" title="새창열림">
+								<img src="/file/viewImage.do?category=main&nm=N_휴면공제금_1505286095604.png" title="휴면공제금찾아주기캠페인안내_잠자고있는휴면공제금을찾아가세요"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="/customer/cus1101.do" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=mainbanner06_1479502838500.png" title="MG새마을금고인터넷뱅킹대위변제찾아주기캠페인"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="https://www.kfcc.co.kr/customer/cus1201_01.do" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=mainbanner05_1479502816726.png" title="새마을금고예금자보호제도안내"/>
+							</a>
+						</li>
+					
+						<li >
+							<a href="/cyberpr/cyb0201.do?num=219&reqMode=view" class="link list01" >
+								<img src="/file/viewImage.do?category=main&nm=배너_내 계좌 한눈에 서비스 안내_1513823061397.png" title="MG새마을금고 내계좌한눈에서비스안내"/>
+							</a>
+						</li>
+					
+				</ul>
+				<div class="pointer">
+					<a href="javascript:void(0);" class="prevGo">앞으로 이동</a>
+					<a href="javascript:void(0);" class="nevtGo">뒤로 이동</a>
+				</div>
+				
+				<div class="ctrBtn">
+					<a href="#" class="">정지/재생 버튼</a>
+					
+				</div>
+			</div>
+			
+		 -->
+		<div class="middleArea">				
+
+
+			
+
+
+			<!-- Left side Link -->
+
+
+				
+
+
+				<!-- Left side Link -->
+
+
+			
+
+
+		</div>
+
+
+		<!-- CONTAINER -->
+
+
+		<div id="container">
+
+
+			<!-- CONTENTS -->
+
+
+			<div id="contents" style="min-height:490px;">
+
+		<!-- Left content Start -->
+
+		<div class="conArea">
+
+		<div class="shortcutMn">
+
+					<ul class="sm">
+
+						<li class="on">
+
+							<a href="javascript:void(0);"><img src="./MG새마을금고_files/tab_01.png" alt="인터넷뱅킹"><span></span></a>
+
+							<div class="linkView">
+
+								<ul class="on">
+							     	<li>
+
+										<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000000344" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_01.jpg" alt="개인뱅킹"></a>
+
+									</li>	
+
+									<li>
+
+										<a href="https://biz.kfcc.co.kr/" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_02.jpg" alt="기업뱅킹"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://www.kfcc.co.kr/customer/cus0403_01.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_03.jpg" alt="스마트뱅킹"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000000447" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_04.jpg" alt="전자금융안내"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000000352" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_05.jpg" alt="공인인증센터"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000000381" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_01_06.jpg" alt="공과금"></a>
+
+									</li>
+
+
+								</ul>
+
+							</div>
+
+						</li>
+
+						<li>
+
+							<a href="javascript:void(0);"><img src="./MG새마을금고_files/tab_02.png" alt="금융상품"><span></span></a>
+
+							<div class="linkView">
+
+							<ul class="on">
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods01_main.do"><img src="./MG새마을금고_files/tab_02_01.jpg" alt="예금상품"></a>
+
+								</li>
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods02_main.do"><img src="./MG새마을금고_files/tab_02_02.jpg" alt="대출상품"></a>
+
+								</li>
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods04_main.do"><img src="./MG새마을금고_files/tab_02_03.jpg" alt="체크카드"></a>
+
+								</li>
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods05_main.do"><img src="./MG새마을금고_files/tab_02_04.jpg" alt="공제상품"></a>
+
+								</li>
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods0501.do"><img src="./MG새마을금고_files/tab_02_05.jpg" alt="예금계산"></a>
+
+								</li>
+
+								<li>
+
+									<a href="https://www.kfcc.co.kr/goods/goods0504.do"><img src="./MG새마을금고_files/tab_02_06.jpg" alt="대출계산"></a>
+
+								</li>	
+
+							</ul>
+
+							</div>
+
+						</li>
+
+						<li>
+
+							<a href="javascript:void(0);"><img src="./MG새마을금고_files/tab_03.png" alt="체크카드"><span></span></a>
+
+							<div class="linkView">
+
+								<ul class="on">
+
+									<li>
+
+										<a href="https://www.kfcc.co.kr/goods/goods04_main.do"><img src="./MG새마을금고_files/tab_03_01.jpg" alt="카드안내"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://mgcheck.kfcc.co.kr/cmn/giftcd/cmnMgCdGuidList.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_03_02.jpg" alt="MG기프트카드"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://mgcheck.kfcc.co.kr/pers/mobcd/persCdIntro.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_03_03.jpg" alt="모바일뱅킹"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://mgcheck.kfcc.co.kr/pers/inqy/persStatList.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_03_04.jpg" alt="이용대금안내서"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://mgcheck.kfcc.co.kr/pers/cdmn/persCdmnList.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_03_05.jpg" alt="보유카드조회"></a>
+
+									</li>
+
+									<li>
+
+										<a href="https://mgcheck.kfcc.co.kr/pers/poin/persPoinList.do" target="_blank" title="새 창 열림"><img src="./MG새마을금고_files/tab_03_06.jpg" alt="포인트조회"></a>
+
+									</li>	
+
+								</ul>
+
+							</div>
+
+						</li>
+
+						
+
+					</ul>
+
+				</div>
+
+			</div>
+
+		<!--// Left content end -->
+
+		<!-- center visual start -->
+		
+
+		<div class="slideView">
+			
+			
+			<ol class="pointer"><!-- 2016-11-04 a링크에 타이틀 추가 -->
+				
+					<li class="" style="transform: matrix3d(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);">
+						<a href="javascript:void(0);" title="2019가을01_당신의좋은날MG새마을금고"></a>
+					</li>
+				
+					<li class="" style="transform: matrix3d(0.947778, 0, -0.31893, 0, 0, 1, 0, 0, 0.31893, 0, 0.947778, 0, 0, 0, 0, 1);">
+						<a href="javascript:void(0);" title="2019가을02_좋은이웃MG새마을금고언제나곁에서힘이되는등든한이웃처럼"></a>
+					</li>
+				
+					<li class="current" style="transform: matrix3d(-0.947778, 0, 0.31893, 0, 0, 1, 0, 0, -0.31893, 0, -0.947778, 0, 0, 0, 0, 1);">
+						<a href="javascript:void(0);" title="2019가을03_좋은이웃MG새마을금고언제나곁에서힘이되는등든한이웃처럼"></a>
+					</li>
+				
+				
+				<!--[2016-11-14] div.bodyBgBtn <li> 안으로 추가, div 삭제, <li> 클래스 명 변경 후 추가-->
+				<li class="playBtn">
+                    <a href="https://www.kfcc.co.kr/index.do#" title="중지" class="btn"><label id="playStop" style="visibility:hidden;display:none;">재생</label></a>
+		        </li>
+			</ol>
+			
+			
+			
+
+			
+
+		</div>
+
+		<!--// center visual end -->
+		<div class="popupView">
+			<div class="banner01">
+				<div class="banBg"></div>
+					<ul>
+						<!-- popupzonelist -->
+	
+						
+	
+							<li class="" id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=180&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(3).do" alt="화상회의">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=180&boardId=etc30&reqMode=view">화상회의</a></span>-->
+							</li>
+						
+	
+							<li id="popupBg" class="">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=178&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(4).do" alt="사랑의열매">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=178&boardId=etc30&reqMode=view">사랑의열매</a></span>-->
+							</li>
+						
+	
+							<li id="popupBg" class="">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=179&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(5).do" alt="소상공인지원 포럼">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=179&boardId=etc30&reqMode=view">소상공인지원 포럼</a></span>-->
+							</li>
+						
+	
+							<li id="popupBg" class="">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=176&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(6).do" alt="희망나눔공제 증서 전달식">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=176&boardId=etc30&reqMode=view">희망나눔공제 증서 전달식</a></span>-->
+							</li>
+						
+	
+							<li id="popupBg" class="">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=174&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(7).do" alt="정보보호의날">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=174&boardId=etc30&reqMode=view">정보보호의날</a></span>-->
+							</li>
+						
+	
+							<li id="popupBg" class="on">
+	
+								<a href="https://www.kfcc.co.kr/federation/fed0102.do?num=172&amp;boardId=etc30&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(8).do" alt="해외겸용체크카드">
+	
+								</a>
+								<!--<span class="popupTitle"><a href="/federation/fed0102.do?num=172&boardId=etc30&reqMode=view">해외겸용체크카드</a></span>-->
+							</li>
+						
+	
+					</ul>
+					 <ol class="pointer">
+						
+							<li class="">
+								<a href="javascript:void(0);" title="화상회의" id="0"></a>
+							</li>
+						
+							<li class="">
+								<a href="javascript:void(0);" title="사랑의열매" id="1"></a>
+							</li>
+						
+							<li class="">
+								<a href="javascript:void(0);" title="소상공인지원 포럼" id="2"></a>
+							</li>
+						
+							<li class="">
+								<a href="javascript:void(0);" title="희망나눔공제 증서 전달식" id="3"></a>
+							</li>
+						
+							<li class="">
+								<a href="javascript:void(0);" title="정보보호의날" id="4"></a>
+							</li>
+						
+							<li class="on">
+								<a href="javascript:void(0);" title="해외겸용체크카드" id="5"></a>
+							</li>
+						
+						
+						
+						<li class="playBtn">
+		                    <a href="https://www.kfcc.co.kr/index.do#" title="중지" class="btn"><label id="BanPlayStop" style="visibility:hidden;display:none;">재생</label></a>
+				        </li>
+					</ol>
+				</div>
+			<div class="banner02">
+				<div class="banBg"></div>
+					<span class="bannerTitle">보도자료</span>
+					<ul>
+						<!-- popupzonelist -->
+						
+	
+							<li class="on" id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do?num=489&amp;boardId=gumgopress&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(9).do" alt="대학생금융실무교육 모집">
+	
+								</a>
+							</li>
+						
+	
+							<li id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do?num=490&amp;boardId=gumgopress&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(10).do" alt="화상회의">
+	
+								</a>
+							</li>
+						
+	
+							<li id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do?num=487&amp;boardId=gumgopress&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(11).do" alt="소상공인포럼">
+	
+								</a>
+							</li>
+						
+	
+							<li id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do?num=485&amp;boardId=gumgopress&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(12).do" alt="라오스">
+	
+								</a>
+							</li>
+						
+	
+							<li id="popupBg">
+	
+								<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do?num=484&amp;boardId=gumgopress&amp;reqMode=view" class="link list01">
+	
+									<img src="./MG새마을금고_files/viewImage(13).do" alt="희망나눔공제">
+	
+								</a>
+							</li>
+						
+	
+					</ul>
+	
+				<div class="pointer">
+					<a href="javascript:void(0);" class="prevGo"><label id="prevGo" style="visibility:hidden;display:none;">이전</label></a>
+					<!--<a href="javascript:void(0);" class="stop"><label id="stop" style="visibility:hidden;display:none;">정지</label></a>-->
+					<a href="javascript:void(0);" class="nevtGo"><label id="nevtGo" style="visibility:hidden;display:none;">다음</label></a>
+					<a href="https://www.kfcc.co.kr/cyberpr/cyb0203.do" class="go"><label id="go" style="visibility:hidden;display:none;">전체보기</label></a>
+				</div>
+			</div>
+		</div>
+		<!-- right content start -->
+
+		<div class="contLeftArea">
+
+			<!-- notice start -->
+
+			<div class="hbnotice">
+
+				<ul class="notBg">
+
+					<li></li><li></li><li></li>
+
+				</ul>
+
+				<div class="selt">
+					
+					<div class="hbgongo_doc">
+							<span class="hbTitle">입찰공고<span><a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do" class="go" title="전체보기"><img src="./MG새마을금고_files/btn_view.jpg" alt="전체보기"></a></span></span>
+								<ul>
+
+								
+
+									<li>
+
+										<ul>
+
+											<li>
+
+												<a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do?num=2445&amp;reqMode=view">
+
+													새마을금고중앙회 인천지역본부 회관 매각 ...
+
+												</a>
+
+											</li>
+
+											<li style="width:55px;"><span class="date">2019.11.26</span></li>
+
+										</ul>
+
+									</li>
+
+								
+
+									<li>
+
+										<ul>
+
+											<li>
+
+												<a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do?num=2444&amp;reqMode=view">
+
+													MG체크카드 제서식 제작 및 보급 입찰공...
+
+												</a>
+
+											</li>
+
+											<li style="width:55px;"><span class="date">2019.11.21</span></li>
+
+										</ul>
+
+									</li>
+
+								
+
+									<li>
+
+										<ul>
+
+											<li>
+
+												<a href="https://www.kfcc.co.kr/cyberpr/cyb0204.do?num=2443&amp;reqMode=view">
+
+													2019년 공제포인트 판촉용품 치약세트 ...
+
+												</a>
+
+											</li>
+
+											<li style="width:55px;"><span class="date">2019.11.21</span></li>
+
+										</ul>
+
+									</li>
+
+								
+
+								</ul>
+
+				</div>
+				</div>
+
+			</div>
+
+			<!-- banner start -->
+			
+			<div class="banner">
+
+				<div class="banBg"></div>
+
+				<ul>
+
+					<!-- popupzonelist -->
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/recruit/rec0095_view.do?seq=1139&amp;pageNo=1" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(14).do" alt="새마을금고중앙회 별정직(신입) 및 전문계약직 직원 채용 공고">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/cyberpr/cyb0201.do?num=262&amp;reqMode=view" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(15).do" alt="2019년새마을금고대학생금융실무교육과정모집안내">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="on">
+
+							<a href="https://ibs.kfcc.co.kr/ib20/mnu/MCT0000000001126" class="link list01" target="_blank" title="새창열림">
+
+								<img src="./MG새마을금고_files/viewImage(16).do" alt="미지급배당금">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://mgcheck.kfcc.co.kr/" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(17).do" alt="해외체크카드오픈안내">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/recruit/gumgoCareer/rec0201.do" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(18).do" alt="새마을금고 경력직인재풀등록">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://insu.kfcc.co.kr/res/res.do" class="link list01" target="_blank" title="새창열림">
+
+								<img src="./MG새마을금고_files/viewImage(19).do" alt="휴면공제금찾아주기캠페인안내_잠자고있는휴면공제금을찾아가세요">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/customer/cus1101.do" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(20).do" alt="MG새마을금고인터넷뱅킹대위변제찾아주기캠페인">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/customer/cus1201_01.do" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(21).do" alt="새마을금고예금자보호제도안내">
+
+							</a>
+
+						</li>
+
+					
+
+						<li class="">
+
+							<a href="https://www.kfcc.co.kr/cyberpr/cyb0201.do?num=219&amp;reqMode=view" class="link list01">
+
+								<img src="./MG새마을금고_files/viewImage(22).do" alt="MG새마을금고 내계좌한눈에서비스안내">
+
+							</a>
+
+						</li>
+
+					
+
+				</ul>
+
+				<div class="pointer">
+					<!-- 
+					<a href="javascript:void(0);" class="prevGo">이전</a>
+					
+					<span class="ctr_play"><a href="javascript:void(0);" style="margin-left:2px;margin-top:1px;">정지/재생 버튼</a></span>
+					
+					<a href="javascript:void(0);" class="nevtGo">다음</a>
+					 -->
+					
+					<a href="javascript:void(0);" class="prevGo"><img src="./MG새마을금고_files/mimg_left.png" alt="이전"></a>
+					<a href="javascript:void(0);" class="play"><img src="./MG새마을금고_files/mimg_play.png" alt="재생"></a>
+					<a href="javascript:void(0);" class="stop"><img src="./MG새마을금고_files/mimg_stop.png" alt="정지"></a>
+					<a href="javascript:void(0);" class="nevtGo"><img src="./MG새마을금고_files/mimg_right.png" alt="다음"></a>
+
+				</div>
+
+				<!-- 2016-11-25 재생/정지 버튼 추가 -->
+
+				<!-- 
+
+				<div class="ctrBtn">
+
+					<a href="#" class="">정지/재생 버튼</a>
+
+					
+
+				</div>
+
+				 -->
+
+			</div>
+
+			<!--// banner end -->
+
+			
+
+			
+
+			<!--//notice end -->
+
+			<div class="iconMn">
+
+				<div class="bg"></div>
+
+				<ul>
+                     
+					<li class="sm1">
+
+						<a href="https://ibs.kfcc.co.kr/" target="_blank" title="새 창 열림">개인뱅킹</a>
+
+					</li>
+					<li class="sm2">
+
+						<a href="https://www.kfcc.co.kr/goods/goods_submain.do" target="_blank" title="새 창 열림">금융상품</a>
+
+					</li>
+					<li class="sm3">
+
+						<a href="https://biz.kfcc.co.kr/" target="_blank" title="새 창 열림">기업뱅킹</a>
+
+					</li>
+					
+					<li class="sm4">
+
+						<a href="https://mgcheck.kfcc.co.kr/" target="_blank" title="새 창 열림">체크카드</a>
+
+					</li>
+					<li class="sm5">
+
+						<a href="https://insu.kfcc.co.kr/main.do" target="_blank" title="새 창 열림">공제</a>
+
+					</li>
+					
+					<li class="sm6">
+
+						<a href="http://www.mgeshop.co.kr/memb/memb06/memb0608m01/getPageDsgn.html?pageId=P000000042&amp;siteCd=001" target="_blank" title="새 창 열림">MG장터</a>
+
+					</li>
+					<li class="sm7">
+
+						<a href="javascript:openLocationSearch();" title="새 창 열림">금고위치</a>
+
+					</li>
+					<li class="sm8">
+
+						<a href="https://www.kfcc.co.kr/customer/submain.do">고객센터</a>
+
+					</li>
+
+				</ul>
+
+			</div>
+			
+			<input type="hidden" name="toDay" id="toDay" value="201911260410" <="" div="">
+		
+		<!--// right content end -->
+
+	</div>
+
+
+			<!-- //CONTENTS -->
+
+
+		</div>
+
+
+		<!-- //CONTAINER -->
+
+
+	</div>
+
+
+	
+
+
+	
+
+<!-- FOOTER -->
+
+<div id="footer">
+
+	<div class="inner">
+
+		 
+
+	<!-- 	<a href="javascript:void(0);" class="quickTop">TOP</a> -->
+
+		<div class="logo">
+
+			<img src="./MG새마을금고_files/f_logo.png" alt="MG새마을금고">
+
+		</div>
+
+		<div class="company">
+
+			<div class="menu">
+
+				<ul>
+
+					<li><a href="https://www.kfcc.co.kr/customer/cus0401_01.do"><strong>이용시간</strong></a></li>
+
+					<li><a href="https://www.kfcc.co.kr/customer/cus0701_01.do">이용약관</a></li>
+
+					<li><a href="https://www.kfcc.co.kr/etc/etc0101.do"><em>개인정보처리방침</em></a></li>
+
+					<li><a href="https://www.kfcc.co.kr/customer/cus0101.do">전자민원</a></li>
+
+					<li><a href="https://www.kfcc.co.kr/etc/sitemap.do">사이트맵</a></li>
+
+					<li><a href="https://www.kfcc.co.kr/english/index.do">English</a></li>
+
+					<li><a href="javascript:openLoanGuideSearch();">셀프상담</a></li>
+
+				</ul>
+
+			</div>
+
+			<div class="info">
+
+				<div class="customer">
+
+					<dl>
+
+						<dt>금융문의</dt>
+
+						<dd><span>1599-9000,</span><span>1588-8801</span></dd>
+
+						<dt>공제문의</dt>
+
+						<dd><span>1599-9010,</span></dd>
+
+						<dt>보이스피싱 금융사고</dt>
+
+						<dd><span>080-890-0201</span></dd>
+
+					</dl>
+
+				</div>
+
+				<p class="copyright">COPYRIGHT 2016 © KFCC. ALL RIGHTS RESERVED.</p>
+
+			</div>
+
+		</div>
+
+		<!--============================================================-->
+
+		
+<div class="family">
+	<a href="javascript:void(0);">FAMILY MAP</a>
+	<div class="familyLayer">
+		<div class="dimmed"></div>
+		<div class="inner">
+			<div class="familyCon">
+				<div class="group01">
+					<h4>새마을금고 중앙회 사이트</h4>
+					<ul>
+						<li><a href="javascript:void(0);" class="on">새마을금고</a></li>
+						<li><a href="javascript:void(0);">MG인재개발원</a></li>
+						<li><a href="javascript:void(0);">제주연수원</a></li>
+						<li><a href="javascript:void(0);">새마을금고 복지회</a></li>
+						<li><a href="javascript:void(0);">MG새마을금고 배드민턴단</a></li>
+						<li><a href="javascript:void(0);">MG새마을금고 지역희망나눔재단</a></li>
+						<li><a href="javascript:void(0);">MG신용정보</a></li>
+					</ul>
+					<h4>금융 사이트</h4>
+					<ul>
+						<li><a href="javascript:void(0);">개인 인터넷뱅킹</a></li>
+						<li><a href="javascript:void(0);">기업 인터넷뱅킹</a></li>
+						<li><a href="javascript:void(0);">MG체크카드</a></li>
+						<li><a href="javascript:void(0);">새마을금고 공제</a></li>
+					</ul>
+				</div>
+				<div class="group02">
+					<div class="list01 on">
+						<div class="tit">
+							<p>좋은이웃 새마을금고</p>
+							<h5>새마을금고</h5>
+						</div>
+						<div class="con">
+							<p>언제나 곁에서 힘이 되어주는 든든한 이웃처럼, 믿음과 신뢰를 바탕으로 행복한 사회를 만들어 갑니다.</p>
+							<a href="https://www.kfcc.co.kr/">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list02">
+						<div class="tit">
+							<p>21세기를 이끌어 갈 인재양성의 터</p>
+							<h5>MG인재개발원</h5>
+						</div>
+						<div class="con">
+							<p>지식 기반 사회에 적응하기 위한 창조적 새마을금고 人을 양성하여 경영혁신을 선도하고 회원만족을 실현하기 위한 “최고의 교육서비스＂를 지원합니다.</p>
+							<a href="https://www.kfcc.co.kr/edu/main.do" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list03">
+						<div class="tit">
+							<p>연수와 휴식을 즐길 수 있는</p>
+							<h5>제주연수원</h5>
+						</div>
+						<div class="con">
+							<p>제주시 애월읍 평화로 경마공원 맞은편 4만9천587m2의 휴양 및 레포츠, 세미나 등 다양한 시설이 있는 새로운 개념의 휴양형 연수원 입니다.</p>
+							<a href="http://mgti.kfcc.co.kr/main.do" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list04">
+						<div class="tit">
+							<p>풍요로운 미래를 가꾸어 가는</p>
+							<h5>
+								새마을금고<br>복지회
+							</h5>
+						</div>
+						<div class="con">
+							<p>복지회는 재직 중에는 물론 퇴직 후에도 보다 여유롭고 안정된 삶을 누릴 수 있도록 도와드리는 회원복지 프로그램을 확대하고 있습니다.</p>
+							<a href="http://www.kccwf.or.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list05">
+						<div class="tit">
+							<p>
+								생활 스포츠의 확장과<br>배드민턴 활성화
+							</p>
+							<h5>
+								MG새마을금고<br>배드민턴단
+							</h5>
+						</div>
+						<div class="con">
+							<p>생활 스포츠로 자리매김한 배드민턴의 경기력 향상과 저변확대를 통한 배드민턴 스포츠의 중흥에 앞장서겠습니다.</p>
+							<a href="https://www.kfcc.co.kr/sports/main.do" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list10">
+						<div class="tit">
+							<p>
+								참 좋은당신, 눈부신 세상을 그리다
+							</p>
+							<h5>
+								MG새마을금고 지역희망나눔재단
+							</h5>
+						</div>
+						<div class="con">
+							<p>MG새마을금고 지역희망나눔재단이 가장 가까이에서 이웃의 어려움을<br>함께 나누는 사회공헌 전문 재단으로 나아가겠습니다.</p>
+							<a href="http://www.kfccf.or.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list11">
+						<div class="tit">
+							<p>
+							
+							</p>
+							<h5>
+								MG신용정보
+							</h5>
+						</div>
+						<div class="con">
+							<p>새마을금고중앙회 100% 자회사로 재출범한 MG신용정보는 1996년 채권추심업무를 시작한 이래<br>약 20여년간 신용정보업계를 선도해온
+							국내최고의 채권추심 및 자산관리 전문 회사입니다.</p>
+							<a href="http://www.mginfo.co.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list06">
+						<div class="tit">
+							<p>
+								정직과 신용을 바탕으로 안전한 <br>인터넷 금융서비스
+							</p>
+							<h5>개인 인터넷뱅킹</h5>
+						</div>
+						<div class="con">
+							<p>
+								인터넷이 가능한 PC를 통하여 <br>새마을금고 인터넷뱅킹 사이트에서 각종 조회, 계좌이체, 예적금 가입, 대출, 공제 등 금융업무를 편리하게 처리할 수 있는 서비스 입니다.
+							</p>
+							<a href="https://ibs.kfcc.co.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list07">
+						<div class="tit">
+							<p>
+								기업고객에게 보다 안전하고 <br>차별화된 금융서비스
+							</p>
+							<h5>기업 인터넷뱅킹</h5>
+						</div>
+						<div class="con">
+							<p>개인사업자, 법인, 임의단체에서 각종 금융업무를 인터넷으로 편리하게 처리할 수 있는 서비스 입니다.</p>
+							<a href="https://biz.kfcc.co.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list08">
+						<div class="tit">
+							<p>똑똑한 소비를 위한 현명한 선택</p>
+							<h5>MG체크카드</h5>
+						</div>
+						<div class="con">
+							<p>새마을금고 계좌를 보유하신 체크카드 회원이면 체크카드 이용 정보를 온라인으로 빠르고 간편하게 이용하실 수 있습니다.</p>
+							<a href="https://mgcheck.kfcc.co.kr/" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+					<div class="list09">
+						<div class="tit">
+							<p>미래를 도와드리는 든든한 동반자</p>
+							<h5>새마을금고공제</h5>
+						</div>
+						<div class="con">
+							<p>
+								“1인은 만인을 위하여, 만인은 <br>1인을 위하여＂라는 협동정신을 바탕으로 회원들의 안정된 경제생활을 위한 협동조합보험입니다.
+							</p>
+							<a href="https://insu.kfcc.co.kr/main.do" target="_blank" title="새 창 열림">홈페이지 바로가기</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<a href="javascript:void(0);" class="btnClose">닫기</a>
+		</div>
+	</div>
+</div>
+
+		<!--============================================================-->
+		<div class="sns_Logo">
+	    <a href="https://www.youtube.com/withmg" target="_blank" title="새마을금고 공식 유튜브 새 창 열림"><img src="./MG새마을금고_files/sns_tube.png" alt="유튜브 공식 마크"></a>
+		<a href="https://post.naver.com/kfcc_no1" target="_blank" title="새마을금고 공식 네이버 포스트 새 창 열림"><img src="./MG새마을금고_files/sns_post.png" alt="네이버 포스트 공식 마크"></a>
+		<a href="http://blog.naver.com/kfcc_no1" target="_blank" title="새마을금고 공식 네이버 블로그 새 창 열림"><img src="./MG새마을금고_files/sns_blog.png" alt="네이버 블로그 공식 마크"></a>
+		<a href="https://www.facebook.com/kfcc.kr" target="_blank" title="새마을금고 공식 페이스북 새 창 열림"><img src="./MG새마을금고_files/sns_facebook.png" alt="페이스북 공식 마크"></a>
+		</div>
+		<div class="f_waLogo">
+
+			<a href="http://www.webwatch.or.kr/Situation/WA_Situation.html?MenuCD=110" target="_blank" title="국가 공인 인증기관 : 웹와치  새 창 열림"><img src="./MG새마을금고_files/f_wa_logo.png" alt="미래창조과학부 WEB ACCESSIBILITY 마크(웹 접근성 품질인증 마크)" title="국가 공인 인증기관 : 웹와치"></a>
+
+			<img src="./MG새마을금고_files/f_ns_logo.png" alt="VerSign Secured">
+
+		</div>
+
+	</div>
+
+</div>
+
+<!-- //FOOTER -->
+
+
+	<div class="dim"></div>
+
+
+	<!-- layer -->
+<div class="layerWrap2" id="gongzipop2" style="display: none; z-index: 10000; position: absolute; left: 20%; top: 250px; border: 2px solid rgb(0, 158, 219); background: white;">
+	<img src="./MG새마을금고_files/171124_pop.jpg" alt="새마을금고 고객정보 보호를 위한 금융업무 중단 안내 - 항상 저희 새마을금고를 이용해 주시는 고객님께 진심으로 감사의 말씀을 드립니다. - 새마을금고 고객(회원)님의 정보를 보호하기 위한 새마을금고 전산시스템 작업으로 금융업무 일시 중단됨을 안내해 드립니다. 0. 중단일시 : 2017.12.10.(일요일) 00:00 ~ 03:00(3시간) 0. 중단업무 : 인터넷·스마트폰·텔레뱅킹, 상상뱅크, 체크카드, 자동화기기 등 모든 금융업무 중단 0. 문의 : 금융상담센터(1599-9000/1588-8801)">
+	<form action="https://www.kfcc.co.kr/index.do" name="popf2" id="popf2">
+	<div style="text-align:right;padding-top:5px;padding-right:10px;">
+		<span class="input_checkbox ui_complete" style="padding-right:465px;"><label class="normal"><input type="checkbox" id="popChk" name="popChk" value="y"><span></span><em>더 이상 열지않음</em></label></span>
+		<a href="javascript:closePop();" style=""><img src="./MG새마을금고_files/btn_cal_close.gif"></a>
+	</div>
+	</form>
+</div>
+
+<div class="layerWrap" id="gongzipop" style="display: none; opacity: 1;">
+
+
+	<div class="dimmed"></div>
+
+
+	<div class="layerContainer" style="width: 440px; margin-left: -220px; margin-top: -2px;">
+
+
+		<h2>홈페이지 개편 안내</h2>
+
+
+		<div class="layerContent">
+
+
+			<div class="layerCon_resend sTw440">
+
+
+<form action="https://www.kfcc.co.kr/index.do" name="popf" id="popf">
+
+
+				<div class="noticeOpen">
+
+
+					<p>새마을금고 홈페이지가 새롭게 개편되었습니다.<br>새마을금고 홈페이지를 이용하시는 <br>사용자 중심의 편리한 구성으로 개편되었으니 <br>많은 이용 바랍니다.</p>
+
+
+					<span class="input_checkbox ui_complete"><label class="normal"><input type="checkbox" id="popChk" name="popChk" value="y"><span></span><em>더 이상 열지않음</em></label></span>
+
+
+					<div class="btnArea ac">
+
+
+						<a href="javascript:closePop();" class="btnBs">확인</a>
+
+
+					</div>	
+
+
+				</div>
+
+
+</form>
+
+
+			</div>
+
+
+		</div>
+
+
+		<button type="button" onclick="javascript:closePop();" class="layerClose">닫기</button>
+
+
+	</div>
+
+
+</div>
+
+
+<!-- //layer -->
+
+
+</div>
+
+
+<!-- //WRAP -->
+
+
+
+
+
+
+
+
+<!--Body Ends-->
+
+
+
+
+
+</div></body></html>

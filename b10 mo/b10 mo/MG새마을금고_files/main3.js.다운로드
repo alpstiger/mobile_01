@@ -1,0 +1,689 @@
+function hasJqueryObject( $elem ){ return $elem.length > 0; }
+
+var mainAPP = mainAPP || {};
+
+
+
+function getVersionIE () { 
+
+	var word,version = "N/A",
+
+		agent = navigator.userAgent.toLowerCase(),name = navigator.appName; 
+
+	// IE old version ( IE 10 or Lower )
+
+	if ( name == "Microsoft Internet Explorer" ) word = "msie "; 
+
+	else { 
+
+		// IE 11 
+
+		if ( agent.search("trident") > -1 ) word = "trident/.*rv:"; 
+
+		// Microsoft Edge  
+
+		else if ( agent.search("edge/") > -1 ) word = "edge/"; 
+
+	}
+
+	var reg = new RegExp( word + "([0-9]{1,})(\\.{0,}[0-9]{0,1})" ); 
+
+	if (  reg.exec( agent ) != null  ) version = RegExp.$1 + RegExp.$2;
+
+	return parseInt(version);
+
+} 
+
+var ieVersion = getVersionIE();
+
+
+
+console.log("ieVersion : ", ieVersion);
+
+mainAPP.visualEvent = function(){
+
+	var $bodyBg = mainAPP.$body.find(".bodyBg");
+
+	var $bodyBgImg = $bodyBg.find("img");					
+
+	var $slide = mainAPP.$body.find(".slideView");
+
+	var $slideView = $slide.find(".view");
+
+	//var $slideViewList = $slideView.find("li")
+
+	var $slidePointer = $slide.find(".pointer");
+	
+	var $slideViewList = $slidePointer.find("li").not(".playBtn");;
+
+	var $slidePointerList = $slidePointer.find("li").not(".playBtn");
+
+	var slideLength = $slideViewList.length;
+
+	var $playBtn =$slide.find(".playBtn>.btn");
+
+	var delayedTween = null;
+
+    var delay = 1.2;
+
+    var easing = Sine.easeInOut;
+    
+    var $banner01 = mainAPP.$body.find(".banner01");
+    
+    var $banner01Pointer = $banner01.find(".pointer");
+    
+    var $banner01ViewList = $banner01Pointer.find("li").not(".playBtn");;
+    
+    var $banner01PointerList = $banner01Pointer.find("li").not(".playBtn");
+    
+    var banner01Length = $banner01ViewList.length;
+
+	var $banner01playBtn =$banner01.find(".playBtn>.btn");
+	
+	
+	var $banner02 = mainAPP.$body.find(".banner02");
+    
+    var $banner02Pointer = $banner02.find(".pointer");
+    
+    var $banner02ViewList = $banner02Pointer.find("li").not(".playBtn");;
+    
+    var $banner02PointerList = $banner02Pointer.find("li").not(".playBtn");
+    
+    var banner02Length = $banner02ViewList.length;
+
+	var $banner02playBtn =$banner02.find(".playBtn>.btn");
+	
+
+    //$slidePointerList.isAnimated = false;
+
+	
+
+	var rotate = (ieVersion > 9 || !ieVersion) ? true : false;
+
+	//if(rotate) $slideView.addClass("rotate");
+	$slidePointerList.on("click", function(e){
+		var idx = $(this).index();
+
+		if( $slidePointerList.isAnimated === true ) return false;
+		$slidePointerList.isAnimated = true;
+		$playBtn.removeClass("btnon");
+        delayedTween.kill();
+		handleVisual( idx );
+		TweenMax.delayedCall( 2, function(){
+			$slidePointerList.isAnimated = false;
+		})
+	});
+
+	$playBtn.on("click", function(e){
+		if( $(this).hasClass("btnon") )
+		{
+			delayedTween = TweenMax.delayedCall(6,handleVisual);
+			$("#playStop").html("중지");
+			$(this).attr("title","중지");
+		}
+		else
+		{
+			delayedTween.kill();
+			$("#playStop").html("재생");
+			$(this).attr("title","재생");
+		}
+		$(this).toggleClass("btnon");
+	});
+	
+	
+	
+
+	function handleVisual( goto ){
+		var idx,next,$current,$next= null;
+		if( goto=== undefined )
+		{
+			idx = $slideViewList.filter(".current").index();
+			next = (idx !== slideLength-1) ? idx+1 : 0;
+			$current = $slideViewList.eq(idx);
+			$next = $slideViewList.eq(next);
+		}
+		else
+		{
+			idx = $slideViewList.filter(".current").index();
+			next = goto;
+			$current = $slideViewList.eq(idx);
+			$next = $slideViewList.eq(next);
+		}
+
+		//pointer
+		$slidePointerList.filter(".current").removeClass("current");
+		$slidePointerList.eq(next).addClass("current");
+		//bg
+		TweenMax.set($bodyBgImg.eq(next),{display:"block",zIndex:3,opacity:0});
+        $slidePointerList.isAnimated = true;
+		TweenMax.to($bodyBgImg.eq(next),2,{opacity:1,
+			onComplete:function(){
+				$bodyBgImg.eq(idx).hide();
+				$bodyBgImg.eq(next).css("z-index","1");
+                $slidePointerList.isAnimated = false;
+			}
+		});
+		$next.addClass("current");
+		//visual
+		if(rotate){
+			TweenMax.to($current,delay,{delay:.1,rotationY:180,ease:easing,
+				onComplete:function(){
+					$current.removeClass("current");
+				}
+			});
+			TweenMax.set($next,{rotationY:-180});
+			TweenMax.to($next,delay,{delay:.1,rotationY:0,ease: easing });
+		}else{
+			TweenMax.set($next,{zIndex:3,opacity:0});
+			TweenMax.to($next,delay,{delay:.1,opacity:1,ease:easing,
+				onComplete:function(){
+					$next.css("z-index","1");
+					$current.removeClass("current");
+				}
+			});
+		}
+		delayedTween = TweenMax.delayedCall(6,handleVisual);
+	}
+
+	delayedTween = TweenMax.delayedCall(6,handleVisual);
+
+}
+
+
+
+mainAPP.tabEvent = function(){
+
+	var $mainTab = mainAPP.$body.find(".mainTab");
+
+	var $mainTabList = $mainTab.find(">ul>li");
+
+	var $mainTabCtrl = $mainTabList.find(">a");
+
+	
+
+	function handleTab(){
+
+		if(!$(this).parent().hasClass("on")){
+
+			$mainTabList.removeClass("on");
+
+			$(this).parent().addClass("on");
+			
+			
+
+		}
+
+	}
+
+	
+
+	$mainTabCtrl.on("click",handleTab);
+
+}
+
+
+
+mainAPP.bannerEvent = function(){
+
+	var $banner = mainAPP.$body.find(".banner");
+
+	var $bannerList = $banner.find(">ul>li");
+
+	var $pointer = $banner.find(".pointer >ul li");
+
+	var $prevCtrl = $banner.find(".prevGo");
+
+	var $nextCtrl = $banner.find(".nevtGo");
+	
+	var $playCtrl = $banner.find(".play");
+	
+	//var $playCtrl = $(".ctrBtn>a");
+	
+	var $stopCtrl = $banner.find(".stop");
+
+	var bannerLength = $bannerList.length;
+
+	var tween = null;
+
+	function handleBanner(event){
+
+		var dir = event.data.dir;
+
+		var idx = $bannerList.filter(".on").index();
+
+		var next = idx+dir;
+
+		if(next === bannerLength) next = 0;
+
+		if(next === -1) next = bannerLength-1;
+
+		
+
+		$pointer.removeClass("on").eq(next).addClass("on");
+
+		
+
+		$bannerList.filter(".on").removeClass("on");
+
+		$bannerList.eq(next).addClass("on");
+		
+		tween.kill();
+		
+		/*
+		if( !$playCtrl.hasClass("ctr_play") )
+
+		{
+
+            loop();
+
+		}
+		
+		if( !$playCtrl.hasClass("ctr_play") )
+
+		{
+
+            loop();
+
+		}
+		*/
+		if( !$stopCtrl.hasClass("ctr_play") )
+
+		{
+
+            loop();
+
+		}
+		
+	}
+
+	
+
+	$prevCtrl.on("click",{dir:-1},handleBanner);
+
+	$nextCtrl.on("click",{dir:+1},handleBanner);
+
+
+
+    function loop(){
+
+        tween = TweenMax.delayedCall( 6, function(){
+
+            $nextCtrl.trigger("click", { dir : 1 });
+
+        });
+
+	}
+
+    $playCtrl.on("click", function(){
+
+    	$stopCtrl.removeClass("ctr_play");
+            loop();
+
+		
+
+	})
+	
+	 $stopCtrl.on("click", function(){
+		 	$(this).addClass("ctr_play");
+            tween.kill();
+		
+	})
+    loop();
+
+}
+
+
+
+mainAPP.noticeEvent = function(){
+
+	var $notice = mainAPP.$body.find(".notice");
+
+	var $notContList = $notice.find(".notCont > li");
+
+	var $notContListCtrl = $notContList.find(">a");
+
+	var $noticeDocPrevCtrl = $notice.find(".notiGo .prev");
+
+	var $noticeDocNextCtrl = $notice.find(".notiGo .next");
+
+	
+
+	function handleNoticeTab(){
+
+		$notContList.filter(".on").removeClass("on");
+		
+		var idx = $(this).parent().attr("class");
+		if(idx=="bd01"){ //소식
+
+			 $("#allView").attr("title","MG소식 전체보기");
+
+			}else if(idx=="bd02"){//공지사항
+
+				$("#allView").attr("title","MG공지사항 전체보기");
+
+			}else{//입찰공고
+
+				$("#allView").attr("title","입찰공고 전체보기");
+
+			}
+		$(this).parent().addClass("on");
+		
+		
+	}
+
+	
+
+	function handleNoticeDoc(event){
+
+		var $activeTab = $notContList.filter(".on");
+
+		var $noticeDoc = $activeTab.find(".notice_doc li");
+
+		var noticeLength = $noticeDoc.length;
+
+		var idx = $noticeDoc.filter(".on").index();
+
+		var dir = event.data.dir;
+
+		var next = idx+dir;
+
+		if(next === noticeLength) next = 0;
+
+		if(next === -1) next = noticeLength-1;
+
+
+
+		$noticeDoc.removeClass("on").eq(next).addClass("on");
+		
+		
+
+	}
+
+	
+
+	
+
+	
+
+	
+
+
+
+	$notContListCtrl.on("click",handleNoticeTab);
+
+	$noticeDocPrevCtrl.on("click",{dir:-1},handleNoticeDoc);
+
+	$noticeDocNextCtrl.on("click",{dir:+1},handleNoticeDoc);
+
+}
+
+
+
+mainAPP.engNoticeEvent = function(){
+
+	var $notice = mainAPP.$body.find(".engNotice");
+
+	var $noticeDoc = $notice.find(".notice_doc");
+
+	var $noticeDocList = $noticeDoc.find(">ul li");
+
+	var noticeLength = $noticeDocList.length;
+
+	var $noticePrevCtrl = $notice.find(".notiGo .prev");
+
+	var $noticeNextCtrl = $notice.find(".notiGo .next");
+
+	
+
+	function handleNoticeDoc(event){
+
+		var idx = $noticeDocList.filter(".on").index();
+
+		var dir = event.data.dir;
+
+		var next = idx+dir;
+
+		if(next === noticeLength) next = 0;
+
+		if(next === -1) next = noticeLength-1;
+
+		
+
+		$noticeDocList.removeClass("on").eq(next).addClass("on");
+
+	}
+
+	$noticePrevCtrl.on("click",{dir:-1},handleNoticeDoc);
+
+	$noticeNextCtrl.on("click",{dir:+1},handleNoticeDoc);
+
+}
+
+mainAPP.bankEvent = function(){
+
+	var $notice = mainAPP.$body.find(".shortcutMn");
+
+	var $notContList = $notice.find(".sm > li");
+
+	var $notContListCtrl = $notContList.find(">a");
+
+	
+
+	function handleNoticeTab(){
+
+		var $activeTab = $notContList.filter(".on");
+
+		var $noticeDoc = $activeTab.find(".linkView li");
+
+		var noticeLength = $noticeDoc.length;
+
+		var idx = $noticeDoc.filter(".on").index();
+
+		var next = idx;
+
+		if(next === noticeLength) next = 0;
+
+		if(next === -1) next = noticeLength-1;
+
+		$notContList.filter(".on").removeClass("on");
+
+		$(this).parent().addClass("on");
+
+		$noticeDoc.removeClass("on").eq(next).addClass("on");
+
+		//$(".middleArea").css("background-color","#069fdb");
+
+		if($notContList.eq(0).attr("class") == "on"){
+
+			$(".middleArea").css("background-color","#0072bb");
+			$(".middleArea").css("border","1px solid #005e9e");
+
+		}
+
+		if($notContList.eq(1).attr("class") == "on"){
+
+			$(".middleArea").css("background-color","#069fdb");
+			$(".middleArea").css("border","1px solid #0071bc");
+
+
+		}
+
+		if($notContList.eq(2).attr("class") == "on"){
+
+			$(".middleArea").css("background-color","#36c2f0");
+			$(".middleArea").css("border","1px solid #0096d2");
+
+
+		}
+
+	}
+
+	
+
+	
+
+	
+
+	$notContListCtrl.on("click",handleNoticeTab);
+
+	
+
+}
+
+mainAPP.banner01Event = function(){
+	var $banner = mainAPP.$body.find(".banner01");
+	var $bannerList = $banner.find(">ul>li");
+	var $pointer = $banner.find(".pointer > li");
+	var $num = $banner.find(".pointer > li > a");
+	var $nextCtrl = $banner.find(".playBtn");
+	//var $prevCtrl = $banner.find(".prevGo");
+	//var $nextCtrl = $banner.find(".nevtGo");
+	//var $playCtrl =  $banner.find(".play");
+	//var $stopCtrl = $banner.find(".stop");
+	var $playCtrl = $banner.find(".btn");
+	var bannerLength = $bannerList.length;
+	var tween = null;
+	var temp;
+	function handleBanner(event){
+		var dir = event.data.dir;
+		var idx = $bannerList.filter(".on").index();
+		var next = idx+dir;
+		
+		if(next === bannerLength) next = 0;
+		if(next === -1) next = bannerLength-1;
+		
+		$pointer.removeClass("on").eq(next).addClass("on");
+		temp = next;
+		$bannerList.filter(".on").removeClass("on");
+		$bannerList.eq(next).addClass("on");
+		tween.kill();
+		if( !$playCtrl.hasClass("btnon") )
+
+		{
+            loop();
+		}
+	}
+	
+	$playCtrl.on("click",{dir:-1},handleBanner);
+	$nextCtrl.on("click",{dir:+1},handleBanner);
+	
+    function loop(){
+        tween = TweenMax.delayedCall( 6, function(){
+            $nextCtrl.trigger("click", { dir : 1 });
+        });
+	}
+    
+    $num.on("click", function(){
+    	var n = $(this).attr("id");
+    	$bannerList.filter(".on").removeClass("on");
+    	$pointer.removeClass("on").eq(n).addClass("on");
+    	$bannerList.eq(n).addClass("on");
+    });
+   
+    
+    $playCtrl.on("click", function(){
+    	if(temp === -1) temp = bannerLength-1;
+    	if( !$playCtrl.hasClass("btnon") )
+
+		{
+    		
+    		$playCtrl.addClass("btnon");
+    		$("#BanPlayStop").html("재생");
+    		$playCtrl.attr("title","재생");
+    		$bannerList.filter(".on").removeClass("on");
+        	$pointer.removeClass("on").eq(temp).addClass("on");
+        	$bannerList.eq(temp).addClass("on");
+    		tween.kill();
+		}else{
+			
+			$playCtrl.removeClass("btnon");
+    		$("#BanPlayStop").html("중지");
+    		$playCtrl.attr("title","중지");
+    		$bannerList.filter(".on").removeClass("on");
+        	$pointer.removeClass("on").eq(temp).addClass("on");
+        	$bannerList.eq(temp).addClass("on");
+			loop();
+            
+		}
+    	
+	})
+	
+    loop();
+    
+}
+
+
+mainAPP.banner02Event = function(){
+	var $banner = mainAPP.$body.find(".banner02");
+	var $bannerList = $banner.find(">ul>li");
+	var $pointer = $banner.find(".pointer >ul li");
+	var $prevCtrl = $banner.find(".prevGo");
+	var $nextCtrl = $banner.find(".nevtGo");
+	var $playCtrl =  $banner.find(".play");
+	var $stopCtrl = $banner.find(".stop");
+	var bannerLength = $bannerList.length;
+	var tween = null;
+	function handleBanner(event){
+		var dir = event.data.dir;
+		var idx = $bannerList.filter(".on").index();
+		var next = idx+dir;
+		if(next === bannerLength) next = 0;
+		if(next === -1) next = bannerLength-1;
+		
+		$pointer.removeClass("on").eq(next).addClass("on");
+		
+		$bannerList.filter(".on").removeClass("on");
+		$bannerList.eq(next).addClass("on");
+		tween.kill();
+		if( !$stopCtrl.hasClass("ctr_play") )
+		{
+            loop();
+		}
+	}
+	
+	$prevCtrl.on("click",{dir:-1},handleBanner);
+	$nextCtrl.on("click",{dir:+1},handleBanner);
+
+    function loop(){
+        tween = TweenMax.delayedCall( 6, function(){
+            $nextCtrl.trigger("click", { dir : 1 });
+        });
+	}
+	
+	 $stopCtrl.on("click", function(){
+		 if( !$stopCtrl.hasClass("play") ){
+			 $(this).addClass("play");
+			    tween.kill();
+		 }else{
+			 $stopCtrl.removeClass("play");
+	            loop();
+		 }
+		
+	})
+    //loop();
+}
+
+
+$(function(){
+
+	mainAPP.$body = $("body");
+
+	if (hasJqueryObject(mainAPP.$body.find(".slideView"))) mainAPP.visualEvent();
+
+	if (hasJqueryObject(mainAPP.$body.find(".mainTab"))) mainAPP.tabEvent();
+
+	if (hasJqueryObject(mainAPP.$body.find(".banner"))) mainAPP.bannerEvent();
+	
+	if (hasJqueryObject(mainAPP.$body.find(".banner01"))) mainAPP.banner01Event();
+	
+	if (hasJqueryObject(mainAPP.$body.find(".banner02"))) mainAPP.banner02Event();
+
+	if (hasJqueryObject(mainAPP.$body.find(".notice"))) mainAPP.noticeEvent();
+
+	if (hasJqueryObject(mainAPP.$body.find(".engNotice"))) mainAPP.engNoticeEvent();
+
+	if (hasJqueryObject(mainAPP.$body.find(".shortcutMn"))) mainAPP.bankEvent();
+
+	
+
+});

@@ -1,0 +1,826 @@
+var NUMERIC_CHECK = /^[0-9]*$/;
+
+var DECIMAL_CHECK = /^[0-9\.]*$/;
+
+// ---------------------------------------------------------------------------------- String class override
+/**
+ * 
+ */
+/*
+ * if (typeof String.prototype.startsWith != 'function') { // see below for better implementation! String.prototype.startsWith = function(str) { return this.indexOf(str) === 0; }; }
+ */
+
+/**
+ * 
+ */
+if (typeof String.prototype.lpad != 'function') {
+	String.prototype.lpad = function(padString, length) {
+		var str = this;
+		while (str.length < length) {
+			str = padString + str;
+		}
+		return str;
+	}
+}
+
+/**
+ * trim method
+ */
+/*
+if (typeof String.prototype.trim != 'function') {
+	String.prototype.trim = function(x) {
+		return x.replace(/^\s+|\s+$/gm, '');
+	}
+}
+*/
+// ---------------------------------------------------------------------------------- jQuery override
+/**
+ * 
+ */
+jQuery.fn.ForceNumericOnly = function(maxLength) {
+	return this.each(function() {
+		var elm = jQuery(this);
+
+		if (M4Lang.isNull(maxLength)) {
+			try {
+				maxLength = parseInt(elm.attr("maxlength"));
+			} catch (e) {
+				maxLength = 0;
+			}
+		}
+
+		elm.currValue = elm.val();
+		elm.keyup(function(e) {
+			try {
+				var newVal = elm.val();
+				if (NUMERIC_CHECK.test(newVal)) {
+					if ((maxLength > 0) && (newVal.length > maxLength)) {
+						elm.val(elm.currValue);
+						return;
+					}
+					elm.currValue = newVal;
+					return;
+				}
+				elm.val(elm.currValue);
+			} catch (e) {
+				alert(JSON.stringify(e));
+			}
+		});
+	});
+};
+
+jQuery.fn.DataInitComma = function(decimal) {
+	return this.each(function() {
+		var elm = jQuery(this);
+		elm.currValue = elm.val();
+		elm.keyup(function(e) {
+			var formnum = elm.val();
+			try {
+				num1 = formnum.length;
+				FirstNum = formnum.substr(0, 1);
+				FirstNum2 = formnum.substr(1, num1);
+
+				if (FirstNum == "0") {
+					alert("입력숫자는 0 으로 시작할 수 없습니다.");
+					elm.val(FirstNum2);
+					return;
+				}
+
+				var loop = /^\$|,/g;
+				formnum = formnum.replace(loop, "");
+				var fieldnum = '' + formnum;
+
+				if (decimal) {
+					if (!DECIMAL_CHECK.test(formnum)) {
+						alert("숫자만 입력하실 수 있습니다.");
+						elm.val(elm.currValue);
+						return;
+					}
+				} else {
+					if (!NUMERIC_CHECK.test(formnum)) {
+						alert("숫자만 입력하실 수 있습니다.");
+						elm.val(elm.currValue);
+						return;
+					}
+				}
+				var comma = new RegExp('([0-9])([0-9][0-9][0-9][,.])');
+				var data = fieldnum.split('.');
+				data[0] += '.';
+
+				do {
+					data[0] = data[0].replace(comma, '$1,$2');
+				} while (comma.test(data[0]));
+
+				if (data.length > 1) {
+					elm.currValue = data.join('');
+				} else {
+					elm.currValue = data[0].split('.')[0];
+				}
+
+				elm.val(elm.currValue);
+			} catch (e) {
+				alert(JSON.stringify(e));
+			}
+		});
+	});
+};
+
+if (typeof M4Config == "undefined") {
+	M4Config = {
+		window_width : "800",
+		window_height : "800",
+		action_method : "post"
+	};
+}
+
+/**
+ * 메세지 콘트롤
+ */
+if (typeof MsgControl == "undefined") {
+	MsgControl = {};
+
+	MsgControl.timerObj = null;
+	MsgControl.blockObj = null;
+
+	/**
+	 * 
+	 */
+	MsgControl.openMessage = function(message) {
+		alert(message);
+	};
+
+	/**
+	 * 
+	 */
+	MsgControl.openAlert = function(message) {
+		alert(message + "\r\n 관리자에게 문의해주시기 바랍니다.");
+	};
+
+	/**
+	 * 
+	 */
+	MsgControl.confirm = function(message, okHandler, cancelHandler) {
+		if (confirm(message)) {
+			if (typeof okHandler == "function") {
+				okHandler();
+			}
+			return true;
+		} else {
+			if (typeof cancelHandler == "function") {
+				cancelHandler();
+			}
+			return false;
+		}
+	};
+
+	/**
+	 * 메세지 블럭 닫기
+	 */
+	MsgControl.unblock = function() {
+		if (typeof jQuery.unblockUI == "function") {
+			clearTimeout(MsgControl.timerObj);
+			MsgControl.timerObj = null;
+			jQuery.unblockUI();
+		}
+	};
+
+	/**
+	 * 
+	 */
+	MsgControl.update = function(message) {
+		if (MsgControl.timerObj == null) {
+			MsgControl.block(message);
+		} else {
+			jQuery("div.blockPage").text(message);
+		}
+	};
+
+	/**
+	 * 메세지 블럭 열기
+	 */
+	MsgControl.block = function(msg, interval) {
+		if (typeof jQuery.blockUI == "function") {
+			// 기본 0.2초를 기본 시간 텀으로 둔다.
+			var time = typeof interval == "undefined" ? 200 : interval;
+			MsgControl.timerObj = setTimeout(function() {
+				jQuery.blockUI({
+					message : msg
+				});
+			}, time);
+		}
+	};
+
+	/**
+	 * 
+	 */
+	MsgControl.blockLoading = function() {
+		if (typeof jQuery.blockUI == "function") {
+			MsgControl.timerObj = setTimeout(function() {
+				jQuery.blockUI({
+					message : "<img src='/lplib/image/loader.gif' />",
+					css : {
+						width : "10%",
+						height : "75px",
+						top : '40%',
+						left : '45%',
+						border : "0px solid #FFFFFF",
+						cursor : "wait"
+					},
+					overlayCSS : {
+						backgroundColor : "#D2D2DE",
+						opacity : 0.8,
+						cursor : "wait",
+						width : "100%",
+						height : "100%"
+					}
+				});
+			}, 200);
+		}
+	};
+
+	// TODO : 오류가 발생하면 unblock 이 호출되지 않는 문제 해결후 활성화 해야함.
+	// jQuery(document).ajaxStart(MsgControl.blockLoading).ajaxStop(MsgControl.unblock);
+}
+
+/**
+ * 
+ */
+if (typeof M4Lang == "undefined") {
+	M4Lang = {};
+	M4Lang.isFunction = function(val) {
+		return typeof val == "function";
+	};
+	M4Lang.isString = function(val) {
+		return typeof val == "string";
+	};
+	M4Lang.isObject = function(val) {
+		return typeof val == "object";
+	};
+	M4Lang.isEmptyString = function(obj) {
+		if (obj == null || typeof obj == "undefined") {
+			return true;
+		}
+
+		if (typeof obj == "string" && obj.length == 0) {
+			return true;
+		}
+
+		return false;
+	};
+
+	/**
+	 * 
+	 */
+	M4Lang.isNull = function(obj) {
+		if (obj == null || typeof obj == "undefined") {
+			return true;
+		}
+
+		if (typeof obj == "string" && obj.length == 0) {
+			return true;
+		}
+
+		return false;
+	};
+}
+
+if (typeof M4Dom == "undefined") {
+	M4Dom = {};
+	M4Dom.appendTag = function(targetElement, tagName, tagAttr) {
+		var paramElm = jQuery(document.createElement(tagName));
+
+		for ( var i in tagAttr) {
+			paramElm.attr(i, tagAttr[i]);
+		}
+
+		paramElm.appendTo(targetElement);
+
+		return paramElm;
+	};
+
+	M4Dom.findParentTag = function(elm, findTagName, argHandler) {
+		if (M4Lang.isNull(findTagName)) {
+			alert("find target tag name is null!");
+			return;
+		}
+		var handler = typeof argHandler == "object" ? argHandler : {};
+		var upperTagName = findTagName.toUpperCase();
+		var element = jQuery(elm);
+		var parentTagName = element[0].tagName;
+
+		var iCount = 0;
+
+		while (iCount < 1000) {
+			element = element.parent();
+			if (M4Lang.isNull(element)) {
+				if (typeof handler.onOutOfRange == "function") {
+					handler.onOutOfRange();
+				}
+				return null;
+			}
+			parentTagName = element[0].tagName;
+			if (parentTagName.toUpperCase() == upperTagName) {
+				return element;
+			}
+
+			iCount++;
+		}
+		if (typeof handler.onTooDeep == "function") {
+			handler.onTooDeep();
+		}
+		return null;
+	};
+
+	M4Dom.loadSpanSection = function(elm, target) {
+		var param = (typeof target == "undefined") ? {} : target;
+		var jElm = jQuery(elm);
+		jElm.find("span[title]").each(function(idxOfElm, valOfElm) {
+			var spanElm = jQuery(valOfElm);
+
+			var key = spanElm.attr("title");
+			var value = spanElm.text();
+
+			if (!M4Lang.isNull(key)) {
+				param[key] = value;
+			}
+		});
+		return param;
+	};
+
+	M4Dom.loadFormSection = function(section, container) {
+		var sec = jQuery(section);
+		var vdata = typeof container == "object" ? container : {};
+
+		// form element
+		sec.find(":input").each(function(index, elm) {
+			var targetElm = jQuery(elm);
+			var name = targetElm.attr("name");
+
+			if (M4Lang.isEmptyString(name)) {
+				return;
+			}
+
+			var type = targetElm.attr("type");
+			if (type && type === "checkbox") {
+				if (targetElm.is(':checked')) {
+					var newValue = targetElm.val();
+					var oldValue = vdata[name];
+
+					if (typeof oldValue == "undefined") {
+						vdata[name] = newValue;
+					} else {
+						vdata[name] = oldValue + ";" + newValue;
+					}
+				}
+				return;
+			}
+			if (type && type === "radio") {
+				if (targetElm.is(':checked')) {
+					vdata[name] = targetElm.val();
+				}
+				return;
+			}
+
+			var value = targetElm.val();
+
+			vdata[name] = value;
+		});
+
+		return vdata;
+	};
+
+	/**
+	 * 
+	 */
+	M4Dom.IFRAME_ID = "__actionIframeDetail";
+
+	/**
+	 * 
+	 */
+	M4Dom.makeIframeSection = function() {
+		// remove current detail form
+		jQuery("#" + M4Dom.IFRAME_ID).remove();
+
+		var _iframeElm = document.createElement("iframe");
+		var iframeElm = jQuery(_iframeElm);
+		iframeElm.attr("id", M4Dom.IFRAME_ID);
+		iframeElm.attr("name", M4Dom.IFRAME_ID);
+		iframeElm.attr("border", "0");
+		iframeElm.attr("frameborder", "0");
+		iframeElm.attr("framespacing", "0");
+		iframeElm.attr("height", "0");
+		iframeElm.attr("width", "0");
+		iframeElm.appendTo("body");
+		return iframeElm;
+	};
+
+	M4Dom.htmlUnescape = function(str) {
+		str = str.replace(/&quot;/g, '"');
+		str = str.replace(/&#39;/g, "'");
+		str = str.replace(/&lt;/g, '<');
+		str = str.replace(/&gt;/g, '>');
+		str = str.replace(/&amp;/g, '&');
+		return str;
+	};
+
+	M4Dom.redrawSelectBox = function(elm) {
+		var $obj = M4Dom.findParentTag(elm, "div");
+		$obj.removeClass('ui_complete');
+		window.UI.init();
+	};
+}
+
+if (typeof M4Ajax == "undefined") {
+	M4Ajax = {};
+	M4Ajax.asyncCall = function(url, param, config) {
+		// -- validate
+		if (M4Lang.isNull(url)) {
+			MsgControl.openAlert("url cannot be null");
+			return;
+		}
+
+		if (M4Lang.isNull(config)) {
+			config = {};
+		}
+
+		var options = {
+			type : "POST",
+			async : true,
+			dataType : "html"
+		};
+
+		if (M4Lang.isObject(config.option)) {
+			for ( var key in config.option) {
+				var value = config.option[key];
+
+				options[key] = value;
+			}
+		}
+
+		// option에서 이벤트 멤버를 override 하면 안되기 때문에 기본설정 카피후 선언한다.
+		options.success = function(data, textStatus, jqXHR) {
+			if (M4Lang.isFunction(config.onSuccess)) {
+				config.onSuccess(data);
+			}
+		};
+		options.complete = function(jqXHR, textStatus) {
+			if (M4Lang.isFunction(config.onComplete)) {
+				config.onComplete(textStatus);
+			}
+			MsgControl.unblock();
+		};
+		options.error = function(jqXHR, textStatus, errorThrown) {
+			if (M4Lang.isFunction(config.onError)) {
+				config.onError(textStatus, errorThrown);
+			}
+			MsgControl.unblock();
+		};
+
+		options.beforeSend = function(jqXHR, settings) {
+			if (M4Lang.isFunction(config.onBeforeSend)) {
+				config.onBeforeSend(jqXHR, settings);
+			}
+		};
+
+		options.url = M4Ajax.filterUri(url);
+		options.data = M4Lang.isNull(param) ? {} : param;
+
+		if (typeof config.loadingMessage == "string") {
+			MsgControl.block(config.loadingMessage, 0.2);
+		}
+
+		jQuery.ajax(options);
+	};
+
+	M4Ajax.filterUri = function(uri) {
+		if (typeof uri == "undefined") {
+			MsgControl.openAlert("uri must defined");
+			return;
+		}
+
+		if (uri.charAt(0) == "/" && typeof contextPath != "undefined" && uri.indexOf(contextPath) != 0) {
+			return contextPath + uri;
+		}
+
+		return uri;
+	};
+
+	M4Ajax.actionForm = function(url, param, config) {
+		if (typeof url == "undefined" || url == null) {
+			url = location.pathname;
+		}
+
+		if (typeof param != "object") {
+			MsgControl.openAlert('invalid param type:' + (typeof param));
+			return;
+		}
+
+		var uri = M4Ajax.filterUri(url);
+
+		var formElm = M4Ajax.makeForm(param);
+		formElm.attr("action", uri);
+		formElm.attr("method", M4Config.action_method);
+		if (typeof config == "object") {
+			if (typeof config.windowName != "undefined") {
+				formElm.attr("target", config.windowName);
+				var win = M4Ajax.openWindow("/inc/javascript/blank.html",
+											config.windowName,
+											config.windowWidth,
+											config.windowHeight,
+											config.windowFeature);
+				win.focus();
+			}
+
+			if (typeof config.methodType != "undefined") {
+				formElm.attr("method", config.methodType);
+			}
+
+			if (typeof config.method != "undefined") {
+				formElm.attr("method", config.method);
+			}
+
+			if (typeof config.targetName != "undefined") {
+				formElm.attr("target", config.targetName);
+			}
+		}
+
+		if (typeof config.message == "string") {
+			MsgControl.block(config.message);
+		}
+
+		formElm.submit();
+	};
+
+	/**
+	 * 
+	 */
+	M4Ajax.makeForm = function(param) {
+		// remove current detail form
+		jQuery("#__goDetail").remove();
+
+		var _formElm = document.createElement('form');
+		var formElm = jQuery(_formElm);
+		formElm.attr("id", "__goDetail");
+		formElm.attr("name", "__goDetail");
+
+		for ( var key in param) {
+			var value = param[key];
+			M4Dom.appendTag(formElm, "input", {
+				type : "hidden",
+				name : key,
+				value : value
+			});
+		}
+
+		formElm.appendTo("body");
+		return formElm;
+	};
+
+	M4Ajax.openWindow = function(urlPath, pageName, width, height, feature) {
+		var sFeatures;
+		var wvalue = typeof width == "undefined" ? M4Config.window_width : width;
+		var hvalue = typeof height == "undefined" ? M4Config.window_height : height;
+		if (feature) {
+			sFeatures = "width=" + wvalue + ",height=" + hvalue + "," + feature;
+		} else {
+			sFeatures = "width=" + wvalue + ",height=" + hvalue + ",status=yes,left=10,top=5,resizable=yes,scrollbars=yes";
+		}
+
+		var win = window.open(urlPath, pageName, sFeatures);
+
+		win.focus();
+
+		return win;
+	};
+
+	/**
+	 * 
+	 */
+	M4Ajax.asyncFileDownload = function(uri, param) {
+		// dummy iframe을 만들고
+		M4Dom.makeIframeSection();
+
+		// action
+		M4Ajax.actionForm(uri, param, {
+			method : "post",
+			targetName : M4Dom.IFRAME_ID
+		});
+	}
+}
+
+function NumberCheck(id, num, textlen) {
+	$(id).eq(num).css("imeMode", "disabled").keypress(function(event) {
+		if (event.which && (event.which < 48 || event.which > 57) && event.which != 8) {
+			event.preventDefault();
+		}
+	}).keyup(function() {
+		if ($(id).eq(num).val() != null && $(id).eq(num).val() != '') {
+			// $(id).eq(num).val( $(id).eq(num).val().replace(/[^0-9]/g, '') );
+		}
+
+		if (textlen > 0) {
+			if ($(id).eq(num).val().length > textlen) {
+				var str = $(id).eq(num).val();
+				$(id).eq(num).val(str.substr(0, textlen));
+
+			}
+		}
+	});
+}
+
+function MaxLengthCheck(id, num, textlen) {
+	$(id).eq(num).keypress(function(event) {
+	}).keyup(function() {
+		if ($(id).eq(num).val().length > textlen) {
+			var str = $(id).eq(num).val();
+			$(id).eq(num).val(str.substr(0, textlen));
+			$(id).eq(num).focus();
+		}
+	});
+}
+
+function EmailCheck(checkStr) {
+
+	emailEx1 = /[^@]+@[A-Za-z0-9_-]+.[A-Za-z]+/;
+	emailEx2 = /[^@]+@[A-Za-z0-9_-]+.[A-Za-z0-9_-]+.[A-Za-z]+/;
+	emailEx3 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+	if (emailEx1.test(checkStr))
+		return true;
+
+	if (emailEx2.test(checkStr))
+		return true;
+
+	if (emailEx3.test(checkStr))
+		return true;
+
+	return false;
+}
+
+function EmailCheck_ref(id, num, textlen) {
+	var re_mail = /^[0-9a-zA-Z\.\_\-]@[^0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]$/g;
+	$(id).eq(num).css('imeMode', 'disabled').keypress(function() {
+	}).keyup(function() {
+		if ($(id).eq(num).val() != null && $(id).eq(num).val() != '') {
+			$(id).eq(num).val($(id).eq(num).val().replace(re_mail, ''));
+		}
+	});
+}
+
+/**
+ * 생년월일
+ */
+function CheckRID2(sBirthday) {
+	var nMondth = sBirthday.substring(4, 6);
+	var nDay = sBirthday.substring(6, 8);
+
+	if (sBirthday.length != 8 || nMondth < 1 || nMondth > 12 || nDay < 1 || nDay > 31) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * 전화번호
+ */
+function checkPhoneNumber(s) {
+	var r = new RegExp(/^[0-9]{2,3}\-?[0-9]{3,4}\-?[0-9]{4}$/);
+	var r1 = new RegExp(/^[0-9]{3,4}\-?[0-9]{4}$/);
+	return (r.test(s) || r1.test(s));
+}
+
+function numChk() {
+	if (event.keyCode < 48 || event.keyCode > 57) {
+		if (event.keyCode != 45) {
+			event.returnValue = false;
+		}
+	}
+}
+
+// 업로드 파일의 확장자 검사
+function fn_checkFileExt(obj) {
+	var name = typeof obj == "string" ? obj : jQuery(obj).val();
+
+	var index = name.lastIndexOf(".");
+
+	if (index < 0) {
+		return false;
+	}
+
+	//if (name.match(/\.(jsp|asp|aspx|cgi|php|js|class|java|sh|bat|perl|php3|exe)$/)) {
+	if (!name.match(/\.(doc|docx|xls|xlsx|ppt|pptx|hwp|hwpx|txt|pdf|jpg|jpeg|gif|png)$/)) {
+		return false;
+	}
+
+	return true;
+}
+
+var defaultUploadAllowExp = new RegExp(/\.(doc|docx|xls|xlsx|ppt|pptx|hwp|hwpx|txt|pdf|jpg|jpeg|gif|png)$/);
+
+function fn_checkFileElement(element, exp) {
+	if(typeof exp == "undefined"){
+		exp = defaultUploadAllowExp;
+	}
+	if (exp.test(element.value)) {
+		return false;
+	}
+
+	element.parentNode.innerHTML = element.parentNode.innerHTML;
+	return true;
+}
+
+$(function() {
+	$(".datepicker").datepicker({
+		inline : true,
+		gotoCurrent : true,
+		showOtherMonths : true,
+		changeYear : false,
+		changeMonth : false,
+		buttonText : "달력",
+		yearRange : "1950:2027",
+		nextText : "다음 달",
+		prevText : "이전 달",
+		currentText : "오늘",
+		closeText : "닫기",
+		dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesMin : [ "일", "월", "화", "수", "목", "금", "토" ],
+		monthNames : [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		monthNamesShort : [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		dateFormat : "yy-mm-dd",
+		showMonthAfterYear : true,
+		yearSuffix : "년"
+	});
+
+	$(".datepicker_type2").datepicker({
+		yearRange : "1950:2027",
+		dateFormat : 'yy-mm-dd',
+		prevText : '이전 달',
+		nextText : '다음 달',
+		monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ],
+		monthNamesShort : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ],
+		dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesMin : [ '일', '월', '화', '수', '목', '금', '토' ],
+		showMonthAfterYear : true,
+		changeMonth : true,
+		changeYear : true,
+
+	});
+	
+	$(".datepicker3").datepicker({
+		inline : true,
+		gotoCurrent : true,
+		showOtherMonths : true,
+		changeYear : false,
+		changeMonth : false,
+		buttonText : "달력",
+		yearRange : "1950:2027",
+		nextText : "다음 달",
+		prevText : "이전 달",
+		currentText : "오늘",
+		closeText : "닫기",
+		dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesMin : [ "일", "월", "화", "수", "목", "금", "토" ],
+		monthNames : [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		monthNamesShort : [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		dateFormat : "yymmdd",
+		showMonthAfterYear : true,
+		yearSuffix : "년"
+	});
+	
+	$(".datepicker_type4").datepicker({
+		yearRange : "1950:2027",
+		dateFormat : 'yymmdd',
+		prevText : '이전 달',
+		nextText : '다음 달',
+		monthNames : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ],
+		monthNamesShort : [ '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월' ],
+		dayNames : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesShort : [ '일', '월', '화', '수', '목', '금', '토' ],
+		dayNamesMin : [ '일', '월', '화', '수', '목', '금', '토' ],
+		showMonthAfterYear : true,
+		changeMonth : true,
+		changeYear : true
+
+	});
+	
+	
+	$(".datepicker_type2").datepicker().focus(function() {
+		$(".ui-datepicker-prev, .ui-datepicker-next").remove();
+	});
+	
+	$(".datepicker_type3").datepicker().focus(function() {
+		$(".ui-datepicker-prev, .ui-datepicker-next").remove();
+	});
+	
+	$(".datepicker_type4").datepicker().focus(function() {
+		$(".ui-datepicker-prev, .ui-datepicker-next").remove();
+	});
+
+	jQuery(".numeric").ForceNumericOnly();
+
+	jQuery(".dollar_value").DataInitComma(false);
+});
